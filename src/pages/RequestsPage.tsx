@@ -120,8 +120,36 @@ function getStatusBadge(status: RequestStatus) {
 
 export default function RequestsPage() {
   const authUser = useAppSelector((state) => state.auth.user)
+  const isAdmin = authUser?.role === 'ADMIN'
+  const isManager = authUser?.role === 'MANAGER'
+  const isTechnician = authUser?.role === 'TECHNICIAN'
   const isStaff = ['ADMIN', 'MANAGER', 'TECHNICIAN'].includes(authUser?.role || '')
   const canAssign = ['ADMIN', 'MANAGER'].includes(authUser?.role || '')
+
+  const canEdit = (req: ServiceRequestResponse) => {
+    if (isAdmin) return true
+    if (req.requester?.id === authUser?.id && req.status !== 'CLOSED' && req.status !== 'RESOLVED') return true
+    return false
+  }
+
+  const canChangeStatus = (req: ServiceRequestResponse) => {
+    if (isAdmin || isManager) return true
+    if (isTechnician && req.assignedTo?.id === authUser?.id) return true
+    return false
+  }
+
+  const getPageSubtitle = () => {
+    if (isAdmin) {
+      return 'Manage, prioritize, and assign service requests across the organization.'
+    }
+    if (isManager) {
+      return 'Review department requests, assign service technicians, and track progress.'
+    }
+    if (isTechnician) {
+      return 'View and update your assigned service tasks and repair tickets.'
+    }
+    return 'Submit service requests and track your ticket resolution progress in real time.'
+  }
 
   // Requests table state
   const [requests, setRequests] = useState<ServiceRequestResponse[]>(DEFAULT_DEMO_REQUESTS)
@@ -576,9 +604,7 @@ export default function RequestsPage() {
         <div className="section-heading">
           <div>
             <h2 className="section-title">Service Requests</h2>
-            <p className="page-subtitle">
-              Manage, assign, update, and track service requests directly through the backend API.
-            </p>
+            <p className="page-subtitle">{getPageSubtitle()}</p>
           </div>
 
           <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
@@ -914,16 +940,18 @@ export default function RequestsPage() {
                           <span>View</span>
                         </button>
 
-                        {/* Edit Request */}
-                        <button
-                          type="button"
-                          className="btn btn-secondary"
-                          onClick={() => handleOpenEdit(req)}
-                          title="Edit Request (PUT /api/requests/{id})"
-                          style={{ padding: '6px 10px', fontSize: '12px' }}
-                        >
-                          <Edit2 size={13} />
-                        </button>
+                        {/* Edit Request (Admin or Author of open request) */}
+                        {canEdit(req) && (
+                          <button
+                            type="button"
+                            className="btn btn-secondary"
+                            onClick={() => handleOpenEdit(req)}
+                            title="Edit Request (PUT /api/requests/{id})"
+                            style={{ padding: '6px 10px', fontSize: '12px' }}
+                          >
+                            <Edit2 size={13} />
+                          </button>
+                        )}
 
                         {/* Assign (Admin & Manager) */}
                         {canAssign && req.status !== 'RESOLVED' && req.status !== 'CLOSED' && (
@@ -941,8 +969,8 @@ export default function RequestsPage() {
                           </button>
                         )}
 
-                        {/* Change Status (Staff) */}
-                        {isStaff && (
+                        {/* Change Status (Admin, Manager, or Assigned Technician) */}
+                        {canChangeStatus(req) && (
                           <button
                             type="button"
                             className="btn btn-secondary"
@@ -1184,7 +1212,7 @@ export default function RequestsPage() {
       )}
 
       {/* EDIT MODAL */}
-      {editingRequest && (
+      {editingRequest && canEdit(editingRequest) && (
         <div className="login-modal-overlay" onClick={() => setEditingRequest(null)}>
           <div
             className="login-modal"
@@ -1342,7 +1370,7 @@ export default function RequestsPage() {
       )}
 
       {/* ASSIGN TECHNICIAN MODAL */}
-      {assigningRequest && (
+      {assigningRequest && canAssign && (
         <div className="login-modal-overlay" onClick={() => setAssigningRequest(null)}>
           <div
             className="login-modal"
@@ -1418,7 +1446,7 @@ export default function RequestsPage() {
       )}
 
       {/* CHANGE STATUS MODAL */}
-      {statusChangingRequest && (
+      {statusChangingRequest && canChangeStatus(statusChangingRequest) && (
         <div className="login-modal-overlay" onClick={() => setStatusChangingRequest(null)}>
           <div
             className="login-modal"
@@ -1465,7 +1493,7 @@ export default function RequestsPage() {
                     }}
                   >
                     <option value="">Select new status...</option>
-                    {statusChangingRequest.status === 'SUBMITTED' && (
+                    {statusChangingRequest.status === 'SUBMITTED' && (isAdmin || isManager) && (
                       <option value="PENDING">PENDING (Accept for review)</option>
                     )}
                     {statusChangingRequest.status === 'ASSIGNED' && (
@@ -1474,14 +1502,17 @@ export default function RequestsPage() {
                     {statusChangingRequest.status === 'IN_PROGRESS' && (
                       <option value="RESOLVED">RESOLVED (Work completed)</option>
                     )}
-                    {statusChangingRequest.status === 'RESOLVED' && (
+                    {statusChangingRequest.status === 'RESOLVED' && (isAdmin || isManager) && (
                       <option value="CLOSED">CLOSED (Final sign-off)</option>
                     )}
-                    {/* Fallback general status choices */}
-                    <option value="PENDING">PENDING</option>
-                    <option value="IN_PROGRESS">IN_PROGRESS</option>
-                    <option value="RESOLVED">RESOLVED</option>
-                    <option value="CLOSED">CLOSED</option>
+                    {isAdmin && (
+                      <>
+                        <option value="PENDING">PENDING (Admin override)</option>
+                        <option value="IN_PROGRESS">IN_PROGRESS (Admin override)</option>
+                        <option value="RESOLVED">RESOLVED (Admin override)</option>
+                        <option value="CLOSED">CLOSED (Admin override)</option>
+                      </>
+                    )}
                   </select>
                 </div>
 

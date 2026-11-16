@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Users,
   Search,
@@ -8,6 +9,7 @@ import {
   AlertCircle,
   CheckCircle2,
   Shield,
+  ShieldAlert,
   Wrench,
   Briefcase,
   User,
@@ -94,6 +96,7 @@ function getRoleBadge(role: string) {
 }
 
 export default function StaffPage() {
+  const navigate = useNavigate()
   const authUser = useAppSelector((state) => state.auth.user)
   const isAdmin = authUser?.role === 'ADMIN'
 
@@ -312,6 +315,55 @@ export default function StaffPage() {
   const techCount = users.filter((u) => u.role === 'TECHNICIAN').length
   const employeeCount = users.filter((u) => u.role === 'EMPLOYEE').length
   const activeCount = users.filter((u) => u.active).length
+
+  if (!isAdmin) {
+    return (
+      <div className="staff-page">
+        <section
+          className="content-card"
+          style={{
+            textAlign: 'center',
+            padding: '60px 24px',
+            maxWidth: '600px',
+            margin: '40px auto',
+          }}
+        >
+          <div
+            style={{
+              width: '64px',
+              height: '64px',
+              borderRadius: '50%',
+              background: '#fee2e2',
+              color: '#dc2626',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 20px auto',
+            }}
+          >
+            <ShieldAlert size={32} />
+          </div>
+
+          <h2 style={{ fontSize: '24px', color: '#0f172a', marginBottom: '8px', fontWeight: 700 }}>
+            Access Restricted
+          </h2>
+
+          <p style={{ color: '#64748b', fontSize: '14px', lineHeight: 1.6, marginBottom: '24px' }}>
+            The Staff Management directory contains personnel administrative tools and user records restricted to <strong>Administrator</strong> accounts. You are currently signed in as <strong>{authUser?.fullName || 'User'}</strong> ({authUser?.role || 'Standard Account'}).
+          </p>
+
+          <button
+            type="button"
+            className="btn"
+            onClick={() => navigate('/')}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+          >
+            Return to Dashboard
+          </button>
+        </section>
+      </div>
+    )
+  }
 
   return (
     <div className="staff-page">

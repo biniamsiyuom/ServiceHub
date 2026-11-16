@@ -28,18 +28,25 @@ const location = useLocation()
 const navigate = useNavigate()
 const dispatch = useAppDispatch()
 const authUser = useAppSelector((state) => state.auth.user)
+const isAdmin = authUser?.role === 'ADMIN'
 
 const savedSettings = JSON.parse(
   localStorage.getItem("servicehub_settings") || "{}"
 )
 
-const displayName = authUser?.fullName || savedSettings.displayName || "Administrator"
-const displayRole = authUser?.role ? `${authUser.role} Account` : "Admin account"
+const displayName = authUser?.fullName || savedSettings.displayName || "User"
+const displayRole = authUser?.role ? `${authUser.role} Account` : "Standard Account"
 
 const handleLogout = () => {
   dispatch(logout())
   navigate("/login", { replace: true })
 }
+
+useEffect(() => {
+  if (!isAdmin && (location.pathname === '/staff' || location.pathname === '/categories')) {
+    navigate('/', { replace: true })
+  }
+}, [isAdmin, location.pathname, navigate])
 
 const pageNames: Record<string, string> = {
   '/': 'Dashboard',
@@ -147,6 +154,26 @@ useEffect(() => {
         })
       }
     }
+
+    try {
+      const res = await requestService.list({ size: 5, sort: 'createdAt', direction: 'desc' })
+      if (isMounted && res.content) {
+        const list: DashboardRequest[] = res.content.map((r) => ({
+          id: r.referenceNumber || `SH-${r.id}`,
+          name: r.title,
+          service: r.title,
+          category: r.category?.name || 'General',
+          requester: r.requester?.fullName || 'User',
+          status: r.status,
+          department: r.department?.name || '',
+          location: r.location || '',
+          priority: r.priority,
+        }))
+        setDashboardRequests(list)
+      }
+    } catch {
+      // keep fallback
+    }
   }
 
   loadCounts()
@@ -176,8 +203,12 @@ useEffect(() => {
   const navigation = [
     { name: 'Dashboard', icon: LayoutDashboard },
     { name: 'Service Requests', icon: ClipboardList },
-    { name: 'Categories', icon: Layers },
-    { name: 'Staff', icon: Users },
+    ...(isAdmin
+      ? [
+          { name: 'Categories', icon: Layers },
+          { name: 'Staff', icon: Users },
+        ]
+      : []),
     { name: 'Settings', icon: Settings },
   ]
 
@@ -201,16 +232,16 @@ useEffect(() => {
                 activePage === item.name ? 'active' : ''
               }`}
               onClick={() => {
-  const paths: Record<string, string> = {
-    Dashboard: '/',
-    'Service Requests': '/requests',
-    Categories: '/categories',
-    Staff: '/staff',
-    Settings: '/settings',
-  }
+                const paths: Record<string, string> = {
+                  Dashboard: '/',
+                  'Service Requests': '/requests',
+                  Categories: '/categories',
+                  Staff: '/staff',
+                  Settings: '/settings',
+                }
 
-  navigate(paths[item.name])
-}}
+                navigate(paths[item.name])
+              }}
             >
               <Icon size={19} />
               {item.name}
@@ -222,15 +253,15 @@ useEffect(() => {
           <button
             className="nav-link logout-nav-link"
             onClick={handleLogout}
-            title="Sign out of Admin Portal"
+            title="Sign out of ServiceHub"
           >
             <LogOut size={19} />
             Sign Out
           </button>
           <div className="sidebar-help">
             <Wrench size={23} />
-            <p>Need help managing services?</p>
-            <small>ServiceHub Management</small>
+            <p>{isAdmin ? 'Need help managing services?' : 'Need assistance with a request?'}</p>
+            <small>{isAdmin ? 'ServiceHub Management' : 'ServiceHub Support'}</small>
           </div>
         </div>
       </aside>
