@@ -34,8 +34,8 @@ export default function LoginPage() {
   const [showForgotModal, setShowForgotModal] = useState(false)
 
   const handleFillDemo = () => {
-    setEmail('admin@servicehub.com')
-    setPassword('admin123')
+    setEmail('admin@servicehub.local')
+    setPassword('Password123!')
     setErrorMessage(null)
   }
 
@@ -67,6 +67,7 @@ export default function LoginPage() {
         loginSuccess({
           user: response.user,
           token: response.token,
+          tokenType: response.tokenType,
         }),
       )
 
@@ -143,8 +144,8 @@ export default function LoginPage() {
             </button>
           </div>
           <div className="demo-credentials-info">
-            <div>Email: <strong>admin@servicehub.com</strong></div>
-            <div>Password: <strong>admin123</strong></div>
+            <div>Email: <strong>admin@servicehub.local</strong></div>
+            <div>Password: <strong>Password123!</strong></div>
           </div>
         </div>
 
@@ -170,7 +171,7 @@ export default function LoginPage() {
                 id="email-input"
                 className="login-input"
                 type="email"
-                placeholder="admin@servicehub.com"
+                placeholder="admin@servicehub.local"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 autoComplete="email"
@@ -271,8 +272,8 @@ export default function LoginPage() {
               As this is an enterprise administrator portal, credential resets must be initiated through your system administrator or by using the demo credentials provided above:
             </p>
             <div style={{ background: '#0f172a', padding: '12px', borderRadius: '8px', marginBottom: '18px', fontSize: '13px', color: '#93c5fd' }}>
-              <div>Demo Admin: <strong>admin@servicehub.com</strong></div>
-              <div>Demo Password: <strong>admin123</strong></div>
+              <div>Demo Admin: <strong>admin@servicehub.local</strong></div>
+              <div>Demo Password: <strong>Password123!</strong></div>
             </div>
             <button
               type="button"

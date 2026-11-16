@@ -14,7 +14,8 @@ api.interceptors.request.use((config) => {
     if (rawAuth) {
       const parsed = JSON.parse(rawAuth)
       if (parsed?.token) {
-        config.headers.Authorization = `Bearer ${parsed.token}`
+        const tokenType = parsed.tokenType || 'Bearer'
+        config.headers.Authorization = `${tokenType} ${parsed.token}`
       }
     }
   } catch (error) {
@@ -28,10 +29,13 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('servicehub_auth')
-      // If we are not already on login, redirect
-      if (window.location.pathname !== '/login') {
-        window.location.href = '/login'
+      const url = error.config?.url || ''
+      // Do not treat login failure as a session expiration redirect
+      if (!url.includes('/auth/login')) {
+        localStorage.removeItem('servicehub_auth')
+        if (window.location.pathname !== '/login') {
+          window.location.href = '/login'
+        }
       }
     }
     return Promise.reject(error)

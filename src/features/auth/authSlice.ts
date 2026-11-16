@@ -11,16 +11,17 @@ export interface User {
   fullName: string
   email: string
   role: UserRole
-  departmentId?: number
+  departmentId?: number | null
 }
 
 export interface AuthState {
   user: User | null
   token: string | null
+  tokenType?: string
   isAuthenticated: boolean
 }
 
-const getStoredAuth = (): { user: User; token: string } | null => {
+const getStoredAuth = (): { user: User; token: string; tokenType?: string } | null => {
   try {
     const raw = localStorage.getItem('servicehub_auth')
     if (raw) {
@@ -40,6 +41,7 @@ const storedAuth = getStoredAuth()
 const initialState: AuthState = {
   user: storedAuth?.user || null,
   token: storedAuth?.token || null,
+  tokenType: storedAuth?.tokenType || 'Bearer',
   isAuthenticated: Boolean(storedAuth?.token),
 }
 
@@ -49,10 +51,11 @@ const authSlice = createSlice({
   reducers: {
     loginSuccess: (
       state,
-      action: PayloadAction<{ user: User; token: string }>,
+      action: PayloadAction<{ user: User; token: string; tokenType?: string }>,
     ) => {
       state.user = action.payload.user
       state.token = action.payload.token
+      state.tokenType = action.payload.tokenType || 'Bearer'
       state.isAuthenticated = true
 
       try {
@@ -61,6 +64,7 @@ const authSlice = createSlice({
           JSON.stringify({
             user: action.payload.user,
             token: action.payload.token,
+            tokenType: action.payload.tokenType || 'Bearer',
           }),
         )
       } catch (err) {
@@ -91,6 +95,7 @@ const authSlice = createSlice({
     logout: (state) => {
       state.user = null
       state.token = null
+      state.tokenType = undefined
       state.isAuthenticated = false
 
       try {
