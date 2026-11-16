@@ -37,10 +37,8 @@ const displayName = authUser?.fullName || savedSettings.displayName || "Administ
 const displayRole = authUser?.role ? `${authUser.role} Account` : "Admin account"
 
 const handleLogout = () => {
-  if (window.confirm("Are you sure you want to log out of the Admin Portal?")) {
-    dispatch(logout())
-    navigate("/login", { replace: true })
-  }
+  dispatch(logout())
+  navigate("/login", { replace: true })
 }
 
 const pageNames: Record<string, string> = {
