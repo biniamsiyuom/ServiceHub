@@ -56,7 +56,9 @@ p {
   background: white;
   color: #222;
   box-sizing: border-box;
-  /* Dashboard View Details Panel */
+}
+
+/* Dashboard View Details Panel */
 .details-panel {
   background: #ffffff;
   border: 1px solid #e2e8f0;
@@ -88,6 +90,7 @@ p {
 .details-panel button {
   margin-top: 20px;
 }
+
 /* Details Panel Background Overlay */
 .details-overlay {
   position: fixed;
@@ -107,5 +110,4 @@ p {
   max-height: 90vh;
   overflow-y: auto;
   margin: auto;
-}
 }

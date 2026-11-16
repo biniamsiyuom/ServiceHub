@@ -17,18 +17,31 @@ import {
   Plus,
   Clock,
   CheckCircle,
-  Menu,
+  LogOut,
 } from 'lucide-react'
+import { useAppDispatch, useAppSelector } from './store/hooks'
+import { logout } from './features/auth/authSlice'
 import './App.css'
 
 function App() {
 const location = useLocation()
+const navigate = useNavigate()
+const dispatch = useAppDispatch()
+const authUser = useAppSelector((state) => state.auth.user)
+
 const savedSettings = JSON.parse(
   localStorage.getItem("servicehub_settings") || "{}"
 )
 
-const displayName = savedSettings.displayName || "Administrator"
-const navigate = useNavigate()
+const displayName = authUser?.fullName || savedSettings.displayName || "Administrator"
+const displayRole = authUser?.role ? `${authUser.role} Account` : "Admin account"
+
+const handleLogout = () => {
+  if (window.confirm("Are you sure you want to log out of the Admin Portal?")) {
+    dispatch(logout())
+    navigate("/login", { replace: true })
+  }
+}
 
 const pageNames: Record<string, string> = {
   '/': 'Dashboard',
@@ -125,36 +138,6 @@ useEffect(() => {
     window.removeEventListener("storage", updateDashboardRequests)
   }
 }, [])
-  const requests = [
-    {
-      id: 'SH-001',
-      name: 'Computer repair',
-      category: 'IT Support',
-      requester: 'John Smith',
-      status: 'Pending',
-    },
-    {
-      id: 'SH-002',
-      name: 'Office cleaning',
-      category: 'Cleaning',
-      requester: 'Sarah Johnson',
-      status: 'In Progress',
-    },
-    {
-      id: 'SH-003',
-      name: 'Electrical maintenance',
-      category: 'Maintenance',
-      requester: 'Michael Brown',
-      status: 'Completed',
-    },
-    {
-      id: 'SH-004',
-      name: 'Internet connection',
-      category: 'IT Support',
-      requester: 'David Wilson',
-      status: 'Pending',
-    },
-  ]
 
  const defaultCategoryNames = [
   "IT Support",
@@ -233,6 +216,14 @@ useEffect(() => {
         })}
 
         <div className="sidebar-bottom">
+          <button
+            className="nav-link logout-nav-link"
+            onClick={handleLogout}
+            title="Sign out of Admin Portal"
+          >
+            <LogOut size={19} />
+            Sign Out
+          </button>
           <div className="sidebar-help">
             <Wrench size={23} />
             <p>Need help managing services?</p>
@@ -265,9 +256,18 @@ useEffect(() => {
 </div>
               <div>
                 <strong>{displayName}</strong>
-                <small>Admin account</small>
+                <small>{displayRole}</small>
               </div>
             </div>
+            <button
+              className="logout-button"
+              onClick={handleLogout}
+              title="Sign Out"
+              aria-label="Sign Out"
+            >
+              <LogOut size={16} />
+              <span>Sign Out</span>
+            </button>
           </div>
         </header>
         {showNotifications && (
