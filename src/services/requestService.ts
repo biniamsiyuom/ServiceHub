@@ -219,6 +219,41 @@ export const requestService = {
   },
 
   /**
+   * PATCH /api/technician/tasks/{id}/status
+   * Dedicated endpoint for technicians to update the status of requests assigned to them.
+   * Supports updating status to IN_PROGRESS and COMPLETED / RESOLVED.
+   */
+  async updateTechnicianTaskStatus(
+    id: number,
+    data: { status: RequestStatus | 'COMPLETED' | 'completed' | 'inprogress'; note?: string },
+  ): Promise<ServiceRequestResponse> {
+    try {
+      const response = await api.patch<ServiceRequestResponse>(`/technician/tasks/${id}/status`, data)
+      return response.data
+    } catch {
+      // Fallback to aliases /tasks/{id}/status or /requests/{id}/status
+      try {
+        const aliasResponse = await api.patch<ServiceRequestResponse>(`/tasks/${id}/status`, data)
+        return aliasResponse.data
+      } catch {
+        const fallbackResponse = await api.patch<ServiceRequestResponse>(`/requests/${id}/status`, data)
+        return fallbackResponse.data
+      }
+    }
+  },
+
+  /**
+   * GET /api/technician/tasks
+   * Retrieves assigned tasks specifically for the authenticated technician.
+   */
+  async listTechnicianTasks(params?: ListRequestsParams): Promise<PageResponse<ServiceRequestResponse>> {
+    const response = await api.get<PageResponse<ServiceRequestResponse>>('/technician/tasks', {
+      params,
+    })
+    return response.data
+  },
+
+  /**
    * PATCH /api/requests/{id}/assign
    * Assigns a technician to a request (ADMIN, MANAGER)
    */

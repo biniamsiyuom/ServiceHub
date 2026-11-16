@@ -20,6 +20,7 @@ import {
   X,
   AlertTriangle,
   Lock,
+  Play,
 } from 'lucide-react'
 import {
   requestService,
@@ -547,7 +548,44 @@ export default function RequestsPage() {
     }
   }
 
-  // Handle Status Transition (PATCH /api/requests/{id}/status)
+  // Dedicated technician action to start work or complete an assigned task
+  // using PATCH /api/technician/tasks/{id}/status
+  const handleQuickTechnicianStatus = async (
+    req: ServiceRequestResponse,
+    targetStatus: 'IN_PROGRESS' | 'COMPLETED',
+  ) => {
+    setIsSubmitting(true)
+    setErrorMessage(null)
+
+    try {
+      const updated = await requestService.updateTechnicianTaskStatus(req.id, {
+        status: targetStatus,
+        note:
+          targetStatus === 'IN_PROGRESS'
+            ? 'Technician started diagnostic and repair work'
+            : 'Technician completed service task',
+      })
+
+      setSuccessMessage(
+        `Task "${updated.referenceNumber}" status successfully updated to ${updated.status} via technician task endpoint!`,
+      )
+      await fetchRequests()
+      if (viewingRequest?.id === updated.id) {
+        setViewingRequest(updated)
+      }
+    } catch (err: unknown) {
+      setErrorMessage(
+        extractRequestErrorMessage(
+          err,
+          `Failed to update task to ${targetStatus}. Make sure this request is assigned to you.`,
+        ),
+      )
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  // Handle Status Transition (PATCH /api/technician/tasks/{id}/status or /api/requests/{id}/status)
   const handleStatusChangeSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!statusChangingRequest || !newStatusValue) return
@@ -555,10 +593,20 @@ export default function RequestsPage() {
     setErrorMessage(null)
 
     try {
-      const updated = await requestService.changeStatus(statusChangingRequest.id, {
-        status: newStatusValue,
-        note: statusChangeNote.trim() || undefined,
-      })
+      let updated: ServiceRequestResponse
+
+      if (isTechnician) {
+        // Use dedicated technician endpoint PATCH /api/technician/tasks/{id}/status
+        updated = await requestService.updateTechnicianTaskStatus(statusChangingRequest.id, {
+          status: newStatusValue,
+          note: statusChangeNote.trim() || undefined,
+        })
+      } else {
+        updated = await requestService.changeStatus(statusChangingRequest.id, {
+          status: newStatusValue,
+          note: statusChangeNote.trim() || undefined,
+        })
+      }
 
       setStatusChangingRequest(null)
       setNewStatusValue('')
@@ -966,6 +1014,52 @@ export default function RequestsPage() {
                             style={{ padding: '6px 10px', fontSize: '12px' }}
                           >
                             <UserCheck size={13} />
+                          </button>
+                        )}
+
+                        {/* Quick Technician Action: Start Work (Sets status to IN_PROGRESS via /api/technician/tasks/{id}/status) */}
+                        {isTechnician && req.assignedTo?.id === authUser?.id && req.status === 'ASSIGNED' && (
+                          <button
+                            type="button"
+                            className="btn"
+                            onClick={() => handleQuickTechnicianStatus(req, 'IN_PROGRESS')}
+                            title="Start Work (PATCH /api/technician/tasks/{id}/status)"
+                            disabled={isSubmitting}
+                            style={{
+                              padding: '5px 10px',
+                              fontSize: '12px',
+                              background: '#2563eb',
+                              color: '#ffffff',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '4px',
+                            }}
+                          >
+                            <Play size={12} />
+                            <span>Start</span>
+                          </button>
+                        )}
+
+                        {/* Quick Technician Action: Complete Task (Sets status to COMPLETED via /api/technician/tasks/{id}/status) */}
+                        {isTechnician && req.assignedTo?.id === authUser?.id && req.status === 'IN_PROGRESS' && (
+                          <button
+                            type="button"
+                            className="btn"
+                            onClick={() => handleQuickTechnicianStatus(req, 'COMPLETED')}
+                            title="Complete Task (PATCH /api/technician/tasks/{id}/status)"
+                            disabled={isSubmitting}
+                            style={{
+                              padding: '5px 10px',
+                              fontSize: '12px',
+                              background: '#16a34a',
+                              color: '#ffffff',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '4px',
+                            }}
+                          >
+                            <CheckCircle2 size={12} />
+                            <span>Complete</span>
                           </button>
                         )}
 
@@ -1456,7 +1550,9 @@ export default function RequestsPage() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <Clock size={20} color="#2563eb" />
-                <h3 style={{ margin: 0, fontSize: '18px' }}>Update Status</h3>
+                <h3 style={{ margin: 0, fontSize: '18px' }}>
+                  {isTechnician ? 'Update Task Status (Technician)' : 'Update Status'}
+                </h3>
               </div>
               <button
                 type="button"
@@ -1470,6 +1566,11 @@ export default function RequestsPage() {
             <p style={{ fontSize: '13px', color: '#475569', marginBottom: '16px' }}>
               Current Status: <strong>{statusChangingRequest.status}</strong> for{' '}
               <strong>{statusChangingRequest.referenceNumber}</strong>.
+              {isTechnician && (
+                <span style={{ display: 'block', color: '#2563eb', fontSize: '12px', marginTop: '4px' }}>
+                  Endpoint: <code>PATCH /api/technician/tasks/{statusChangingRequest.id}/status</code>
+                </span>
+              )}
             </p>
 
             <form onSubmit={handleStatusChangeSubmit}>
@@ -1493,24 +1594,40 @@ export default function RequestsPage() {
                     }}
                   >
                     <option value="">Select new status...</option>
-                    {statusChangingRequest.status === 'SUBMITTED' && (isAdmin || isManager) && (
-                      <option value="PENDING">PENDING (Accept for review)</option>
-                    )}
-                    {statusChangingRequest.status === 'ASSIGNED' && (
-                      <option value="IN_PROGRESS">IN_PROGRESS (Start work)</option>
-                    )}
-                    {statusChangingRequest.status === 'IN_PROGRESS' && (
-                      <option value="RESOLVED">RESOLVED (Work completed)</option>
-                    )}
-                    {statusChangingRequest.status === 'RESOLVED' && (isAdmin || isManager) && (
-                      <option value="CLOSED">CLOSED (Final sign-off)</option>
-                    )}
-                    {isAdmin && (
+                    {isTechnician ? (
                       <>
-                        <option value="PENDING">PENDING (Admin override)</option>
-                        <option value="IN_PROGRESS">IN_PROGRESS (Admin override)</option>
-                        <option value="RESOLVED">RESOLVED (Admin override)</option>
-                        <option value="CLOSED">CLOSED (Admin override)</option>
+                        {statusChangingRequest.status === 'ASSIGNED' && (
+                          <option value="IN_PROGRESS">IN_PROGRESS (Start Task)</option>
+                        )}
+                        {statusChangingRequest.status === 'IN_PROGRESS' && (
+                          <>
+                            <option value="COMPLETED">COMPLETED (Complete Task)</option>
+                            <option value="RESOLVED">RESOLVED (Resolve Task)</option>
+                          </>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        {statusChangingRequest.status === 'SUBMITTED' && (isAdmin || isManager) && (
+                          <option value="PENDING">PENDING (Accept for review)</option>
+                        )}
+                        {statusChangingRequest.status === 'ASSIGNED' && (
+                          <option value="IN_PROGRESS">IN_PROGRESS (Start work)</option>
+                        )}
+                        {statusChangingRequest.status === 'IN_PROGRESS' && (
+                          <option value="RESOLVED">RESOLVED (Work completed)</option>
+                        )}
+                        {statusChangingRequest.status === 'RESOLVED' && (isAdmin || isManager) && (
+                          <option value="CLOSED">CLOSED (Final sign-off)</option>
+                        )}
+                        {isAdmin && (
+                          <>
+                            <option value="PENDING">PENDING (Admin override)</option>
+                            <option value="IN_PROGRESS">IN_PROGRESS (Admin override)</option>
+                            <option value="RESOLVED">RESOLVED (Admin override)</option>
+                            <option value="CLOSED">CLOSED (Admin override)</option>
+                          </>
+                        )}
                       </>
                     )}
                   </select>
@@ -1615,6 +1732,77 @@ export default function RequestsPage() {
                 <X size={20} />
               </button>
             </div>
+
+            {/* Technician Task Quick Actions Banner */}
+            {isTechnician && viewingRequest.assignedTo?.id === authUser?.id && (
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '12px 16px',
+                  background: '#eff6ff',
+                  border: '1px solid #bfdbfe',
+                  borderRadius: '8px',
+                  marginBottom: '18px',
+                }}
+              >
+                <div>
+                  <div style={{ fontWeight: 600, color: '#1e40af', fontSize: '13px' }}>
+                    Assigned Task Action (Technician)
+                  </div>
+                  <div style={{ fontSize: '12px', color: '#3b82f6', marginTop: '2px' }}>
+                    {viewingRequest.status === 'ASSIGNED'
+                      ? 'This task is assigned to you. Click to start work.'
+                      : viewingRequest.status === 'IN_PROGRESS'
+                      ? 'Work is currently in progress. Mark complete when finished.'
+                      : 'This task has been resolved.'}
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  {viewingRequest.status === 'ASSIGNED' && (
+                    <button
+                      type="button"
+                      className="btn"
+                      onClick={() => handleQuickTechnicianStatus(viewingRequest, 'IN_PROGRESS')}
+                      disabled={isSubmitting}
+                      style={{
+                        padding: '6px 12px',
+                        fontSize: '12px',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        background: '#2563eb',
+                      }}
+                    >
+                      <Play size={13} />
+                      <span>Start Work</span>
+                    </button>
+                  )}
+
+                  {viewingRequest.status === 'IN_PROGRESS' && (
+                    <button
+                      type="button"
+                      className="btn"
+                      onClick={() => handleQuickTechnicianStatus(viewingRequest, 'COMPLETED')}
+                      disabled={isSubmitting}
+                      style={{
+                        padding: '6px 12px',
+                        fontSize: '12px',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        background: '#16a34a',
+                      }}
+                    >
+                      <CheckCircle2 size={13} />
+                      <span>Complete Task</span>
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
 
             {/* Request Attributes Grid */}
             <div
