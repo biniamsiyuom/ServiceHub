@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import RequestsPage from './pages/RequestsPage'
 import StaffPage from './pages/StaffPage'
 import SettingsPage from './pages/SettingsPage'
+import { requestService } from './services/requestService'
 import {
   LayoutDashboard,
   ClipboardList,
@@ -102,38 +103,70 @@ const [dashboardRequests, setDashboardRequests] = useState<DashboardRequest[]>((
   return saved ? (JSON.parse(saved) as DashboardRequest[]) : []
 })
 
-const totalRequests = dashboardRequests.length
+const [statusCounts, setStatusCounts] = useState<{
+  total: number
+  pending: number
+  inProgress: number
+  completed: number
+}>(() => {
+  const saved = localStorage.getItem('servicehub_requests')
+  const initial = saved ? (JSON.parse(saved) as DashboardRequest[]) : []
+  return {
+    total: initial.length,
+    pending: initial.filter((r) => r.status === 'PENDING').length,
+    inProgress: initial.filter((r) => r.status === 'IN_PROGRESS').length,
+    completed: initial.filter((r) => r.status === 'RESOLVED' || r.status === 'COMPLETED').length,
+  }
+})
 
-const pendingRequests = dashboardRequests.filter(
-  (request: DashboardRequest) => request.status === 'PENDING'
-).length
+const totalRequests = statusCounts.total
+const pendingRequests = statusCounts.pending
+const inProgressRequests = statusCounts.inProgress
+const completedRequests = statusCounts.completed
 
-const inProgressRequests = dashboardRequests.filter(
-  (request: DashboardRequest) => request.status === 'IN_PROGRESS'
-).length
-
-const completedRequests = dashboardRequests.filter(
-  (request: DashboardRequest) => request.status === 'RESOLVED'
-).length
 useEffect(() => {
-  const updateDashboardRequests = () => {
-    const saved = localStorage.getItem("servicehub_requests")
-    setDashboardRequests(saved ? JSON.parse(saved) : [])
+  let isMounted = true
+
+  const loadCounts = async () => {
+    try {
+      const data = await requestService.getStatusCounts()
+      if (isMounted) {
+        setStatusCounts({
+          total: data.totalRequests ?? data.total ?? 0,
+          pending: data.pendingRequests ?? data.pending ?? 0,
+          inProgress: data.inProgressRequests ?? data.inProgress ?? 0,
+          completed: data.completedRequests ?? data.completed ?? 0,
+        })
+      }
+    } catch {
+      if (isMounted) {
+        const saved = localStorage.getItem('servicehub_requests')
+        const list = saved ? (JSON.parse(saved) as DashboardRequest[]) : []
+        setStatusCounts({
+          total: list.length,
+          pending: list.filter((r) => r.status === 'PENDING').length,
+          inProgress: list.filter((r) => r.status === 'IN_PROGRESS').length,
+          completed: list.filter((r) => r.status === 'RESOLVED' || r.status === 'COMPLETED').length,
+        })
+      }
+    }
   }
 
-  window.addEventListener(
-    "servicehub_requests_updated",
-    updateDashboardRequests
-  )
+  loadCounts()
 
-  window.addEventListener("storage", updateDashboardRequests)
+  const updateDashboardRequests = () => {
+    const saved = localStorage.getItem('servicehub_requests')
+    setDashboardRequests(saved ? JSON.parse(saved) : [])
+    loadCounts()
+  }
+
+  window.addEventListener('servicehub_requests_updated', updateDashboardRequests)
+  window.addEventListener('storage', updateDashboardRequests)
 
   return () => {
-    window.removeEventListener(
-      "servicehub_requests_updated",
-      updateDashboardRequests
-    )
-    window.removeEventListener("storage", updateDashboardRequests)
+    isMounted = false
+    window.removeEventListener('servicehub_requests_updated', updateDashboardRequests)
+    window.removeEventListener('storage', updateDashboardRequests)
   }
 }, [])
 
