@@ -1,20 +1,19 @@
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import RequestsPage from './pages/RequestsPage'
+import CategoriesPage from './pages/CategoriesPage'
 import StaffPage from './pages/StaffPage'
 import SettingsPage from './pages/SettingsPage'
 import { requestService } from './services/requestService'
 import {
   LayoutDashboard,
   ClipboardList,
+  Layers,
   Users,
   Settings,
   Wrench,
   Search,
   Bell,
-  Monitor,
-  Building2,
-  ShieldCheck,
   Plus,
   Clock,
   CheckCircle,
@@ -45,6 +44,7 @@ const handleLogout = () => {
 const pageNames: Record<string, string> = {
   '/': 'Dashboard',
   '/requests': 'Service Requests',
+  '/categories': 'Categories',
   '/staff': 'Staff',
   '/settings': 'Settings',
 }
@@ -95,9 +95,6 @@ useEffect(() => {
 }, [])
 
 const [viewingRequest, setViewingRequest] = useState<DashboardRequest | null>(null)
-const [showCategoryForm, setShowCategoryForm] = useState(false)
-const [newCategory, setNewCategory] = useState("")
-const [editingCategory, setEditingCategory] = useState("")
 const [dashboardRequests, setDashboardRequests] = useState<DashboardRequest[]>(() => {
   const saved = localStorage.getItem('servicehub_requests')
   return saved ? (JSON.parse(saved) as DashboardRequest[]) : []
@@ -170,33 +167,6 @@ useEffect(() => {
   }
 }, [])
 
- const defaultCategoryNames = [
-  "IT Support",
-  "Maintenance",
-  "Cleaning",
-  "Security",
-]
-
-const [categoryNames, setCategoryNames] = useState<string[]>(() => {
-  const saved = localStorage.getItem("servicehub_categories")
-  return saved ? JSON.parse(saved) : defaultCategoryNames
-})
-
-const categories = categoryNames.map((name) => ({
-  name,
-  icon:
-    name === "IT Support" ? Monitor :
-    name === "Maintenance" ? Wrench :
-    name === "Cleaning" ? Building2 :
-    name === "Security" ? ShieldCheck :
-    ClipboardList,
-}))
-useEffect(() => {
-  localStorage.setItem(
-    "servicehub_categories",
-    JSON.stringify(categoryNames)
-  )
-}, [categoryNames])
   const filteredRequests = dashboardRequests.filter((request) =>
   `${request.service} ${request.category} ${request.requester} ${request.id}`
     .toLowerCase()
@@ -206,6 +176,7 @@ useEffect(() => {
   const navigation = [
     { name: 'Dashboard', icon: LayoutDashboard },
     { name: 'Service Requests', icon: ClipboardList },
+    { name: 'Categories', icon: Layers },
     { name: 'Staff', icon: Users },
     { name: 'Settings', icon: Settings },
   ]
@@ -233,6 +204,7 @@ useEffect(() => {
   const paths: Record<string, string> = {
     Dashboard: '/',
     'Service Requests': '/requests',
+    Categories: '/categories',
     Staff: '/staff',
     Settings: '/settings',
   }
@@ -374,148 +346,6 @@ useEffect(() => {
             <section className="content-card">
               <div className="section-heading">
                 <div>
-                  <h2 className="section-title">Service Categories</h2>
-                  <p className="page-subtitle">
-                    Explore the services available.
-                  </p>
-                </div>
-                <button
-  className="btn"
-  onClick={() => setShowCategoryForm(!showCategoryForm)}
->
-  <Plus size={17} /> Add Category
-</button>
-              </div>
-         {showCategoryForm && (
-  <form
-    onSubmit={(event) => {
-      event.preventDefault()
-
-      const trimmedCategory = newCategory.trim()
-
-      if (!trimmedCategory) return
-
-      if (
-        categoryNames.some(
-          (name) =>
-            name.toLowerCase() === trimmedCategory.toLowerCase() &&
-            name !== editingCategory
-        )
-      ) {
-        alert('This category already exists.')
-        return
-      }
-
-      if (editingCategory) {
-  setCategoryNames(
-    categoryNames.map((name) =>
-      name === editingCategory ? trimmedCategory : name
-    )
-  )
-
-  const savedRequests = JSON.parse(
-    localStorage.getItem("servicehub_requests") || "[]"
-  )
-
-  const updatedRequests = savedRequests.map((request: DashboardRequest) =>
-    request.category === editingCategory
-      ? { ...request, category: trimmedCategory }
-      : request
-  )
-
-  localStorage.setItem(
-    "servicehub_requests",
-    JSON.stringify(updatedRequests)
-  )
-
-  setDashboardRequests(updatedRequests)
-
-  window.dispatchEvent(
-    new Event("servicehub_requests_updated")
-  )
-} else {
-        setCategoryNames([...categoryNames, trimmedCategory])
-      }
-
-      setEditingCategory('')
-      setNewCategory('')
-      setShowCategoryForm(false)
-    }}
-    style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}
-  >
-    <input
-      type="text"
-      placeholder="Enter category name"
-      value={newCategory}
-      onChange={(event) => setNewCategory(event.target.value)}
-      required
-    />
-
-    <button type="submit" className="btn">
-      Save Category
-    </button>
-
-    <button
-      type="button"
-      className="btn"
-      onClick={() => {
-        setShowCategoryForm(false)
-        setEditingCategory('')
-        setNewCategory('')
-      }}
-    >
-      Cancel
-    </button>
-  </form>
-)}
-              <div className="category-grid">
-                {categories.map((category) => {
-                  const Icon = category.icon
-
-                  return (
-                    <div className="category-card" key={category.name}>
-                      <div className="category-icon">
-                        <Icon size={28} />
-                      </div>
-                      <div className="category-name">{category.name}</div>
-                      <div className="category-count">
-  {dashboardRequests.filter(
-    (request) => request.category === category.name
-  ).length} Requests
-</div>
-                      <button
-  type="button"
-  className="btn"
-  onClick={() => {
-    if (window.confirm(`Delete ${category.name}?`)) {
-      setCategoryNames(
-        categoryNames.filter((name) => name !== category.name)
-      )
-    }
-  }}
->
-  Delete
-</button>
-                 <button
-  type="button"
-  className="btn"
-  onClick={() => {
-    setEditingCategory(category.name)
-    setNewCategory(category.name)
-    setShowCategoryForm(true)
-  }}
->
-  Edit
-</button>
-                    </div>
-                  )
-                })}
-              </div>
-            </section>
-
-            <section className="content-card">
-              <div className="section-heading">
-                <div>
                   <h2 className="section-title">Recent Service Requests</h2>
                   <p className="page-subtitle">
                     View and track the latest requests.
@@ -644,6 +474,8 @@ useEffect(() => {
         </div>
       )}
         {activePage === 'Service Requests' && <RequestsPage />}
+
+        {activePage === 'Categories' && <CategoriesPage />}
 
         {activePage === 'Staff' && <StaffPage />}
 

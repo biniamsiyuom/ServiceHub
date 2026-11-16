@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { categoryService } from "../services/categoryService"
 
 interface ServiceRequest {
   id: string
@@ -62,11 +63,55 @@ export default function RequestsPage() {
   const [showForm, setShowForm] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [requestList, setRequestList] = useState<ServiceRequest[]>(() => {
-  const savedRequests = localStorage.getItem("servicehub_requests")
-  return savedRequests ? JSON.parse(savedRequests) : initialRequests
-})
+    const savedRequests = localStorage.getItem("servicehub_requests")
+    return savedRequests ? JSON.parse(savedRequests) : initialRequests
+  })
   const [viewingRequest, setViewingRequest] = useState<ServiceRequest | null>(null)
- const [commentText, setCommentText] = useState("")
+  const [commentText, setCommentText] = useState("")
+
+  const [availableCategories, setAvailableCategories] = useState<{ id?: number; name: string }[]>(() => {
+    try {
+      const saved = localStorage.getItem("servicehub_categories")
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed.map((c) => (typeof c === "string" ? { name: c } : { id: c.id, name: c.name }))
+        }
+      }
+    } catch {
+      // ignore
+    }
+    return [
+      { name: "Hardware" },
+      { name: "Software" },
+      { name: "Network" },
+      { name: "Maintenance" },
+      { name: "IT Support" },
+      { name: "Cleaning" },
+      { name: "Security" },
+    ]
+  })
+
+  useEffect(() => {
+    let isMounted = true
+    const fetchCategories = async () => {
+      try {
+        const data = await categoryService.getAll(true)
+        if (isMounted && Array.isArray(data) && data.length > 0) {
+          setAvailableCategories(data)
+        }
+      } catch {
+        // ignore
+      }
+    }
+    fetchCategories()
+
+    window.addEventListener("servicehub_categories_updated", fetchCategories)
+    return () => {
+      isMounted = false
+      window.removeEventListener("servicehub_categories_updated", fetchCategories)
+    }
+  }, [])
  useEffect(() => {
   localStorage.setItem("servicehub_requests", JSON.stringify(requestList))
 
@@ -308,10 +353,11 @@ setRequestList((current) => [newRequest, ...current])
             required
           >
             <option value="">Select category</option>
-            <option value="IT Support">IT Support</option>
-            <option value="Cleaning">Cleaning</option>
-            <option value="Maintenance">Maintenance</option>
-            <option value="Security">Security</option>
+            {availableCategories.map((cat) => (
+              <option key={cat.id || cat.name} value={cat.name}>
+                {cat.name}
+              </option>
+            ))}
           </select>
           <input
             name="department"
