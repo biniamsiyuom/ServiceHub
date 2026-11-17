@@ -15,7 +15,6 @@ import {
   Settings,
   Wrench,
   Search,
-  Bell,
   Plus,
   Clock,
   CheckCircle,
@@ -74,35 +73,6 @@ type DashboardRequest = {
 }
 
 const [search, setSearch] = useState('')
-
-const [showNotifications, setShowNotifications] = useState(false)
-
-const [notifications, setNotifications] = useState(() => {
-  const saved = localStorage.getItem("servicehub_notifications")
-  return saved ? JSON.parse(saved) : []
-})
-
-useEffect(() => {
-  const updateNotifications = () => {
-    const saved = localStorage.getItem("servicehub_notifications")
-    setNotifications(saved ? JSON.parse(saved) : [])
-  }
-
-  window.addEventListener(
-    "servicehub_notifications_updated",
-    updateNotifications
-  )
-
-  window.addEventListener("storage", updateNotifications)
-
-  return () => {
-    window.removeEventListener(
-      "servicehub_notifications_updated",
-      updateNotifications
-    )
-    window.removeEventListener("storage", updateNotifications)
-  }
-}, [])
 
 const [viewingRequest, setViewingRequest] = useState<DashboardRequest | null>(null)
 const [dashboardRequests, setDashboardRequests] = useState<DashboardRequest[]>(() => {
@@ -315,14 +285,6 @@ useEffect(() => {
                 />
               </div>
             )}
-            <button
-  className="notification-button"
-  aria-label="Notifications"
-  aria-expanded={showNotifications}
-  onClick={() => setShowNotifications(!showNotifications)}
->
-  <Bell size={20} />
-</button>
             <div className="profile">
               <div className="profile-avatar">
   {displayName.charAt(0).toUpperCase()}
@@ -343,36 +305,6 @@ useEffect(() => {
             </button>
           </div>
         </header>
-        {showNotifications && (
-  <div className="notifications-panel">
-    <h3>Notifications</h3>
-
-    {notifications.length === 0 ? (
-      <p>You have no notifications.</p>
-    ) : (
-      notifications.map((notification: {
-        id: number
-        message: string
-        date: string
-        read: boolean
-      }) => (
-        <div key={notification.id}>
-          <p>{notification.message}</p>
-          <small>
-            {new Date(notification.date).toLocaleString()}
-          </small>
-        </div>
-      ))
-    )}
-
-    <button
-      className="btn"
-      onClick={() => setShowNotifications(false)}
-    >
-      Close
-    </button>
-  </div>
-)}
         {activePage === 'Dashboard' && (
           <>
             <section className="stats-grid">
