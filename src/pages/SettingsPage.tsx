@@ -12,13 +12,17 @@ import {
   AlertCircle,
   Calendar,
   Hash,
+  Pencil,
+  Save,
+  X,
 } from 'lucide-react'
 import {
   userService,
   extractUserErrorMessage,
   type UserProfileResponse,
 } from '../services/userService'
-import { useAppSelector } from '../store/hooks'
+import { useAppDispatch, useAppSelector } from '../store/hooks'
+import { updateUserProfile } from '../features/auth/authSlice'
 
 const AVATAR_COLORS = [
   { bg: '#e0e7ff', text: '#3730a3' }, // Indigo
@@ -79,6 +83,7 @@ function getRoleBadge(role?: string) {
 }
 
 export default function SettingsPage() {
+  const dispatch = useAppDispatch()
   const authUser = useAppSelector((state) => state.auth.user)
 
   // Profile data from GET /api/users/me
@@ -86,6 +91,12 @@ export default function SettingsPage() {
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
+
+  // Inline edit form for PATCH /api/users/me
+  const [isEditing, setIsEditing] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
+  const [formFullName, setFormFullName] = useState('')
+  const [formPhone, setFormPhone] = useState('')
 
   // Auto-dismiss success notification
   useEffect(() => {
@@ -185,6 +196,89 @@ export default function SettingsPage() {
     }
   }, [])
 
+  // Open the inline editor prefilled with the current profile
+  const handleOpenEdit = () => {
+    setFormFullName(userProfile?.fullName || authUser?.fullName || '')
+    setFormPhone(userProfile?.phone || '')
+    setErrorMessage(null)
+    setIsEditing(true)
+  }
+
+  const handleCancelEdit = () => {
+    setIsEditing(false)
+    setFormFullName('')
+    setFormPhone('')
+    setErrorMessage(null)
+  }
+
+  // Save changes via PATCH /api/users/me
+  const handleSubmitProfile = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setErrorMessage(null)
+
+    const cleanName = formFullName.trim()
+    const cleanPhone = formPhone.trim()
+
+    if (!cleanName) {
+      setErrorMessage('Full name is required.')
+      return
+    }
+
+    if (cleanName.length > 150) {
+      setErrorMessage('Full name must be at most 150 characters.')
+      return
+    }
+
+    if (cleanPhone.length > 30) {
+      setErrorMessage('Phone number must be at most 30 characters.')
+      return
+    }
+
+    setIsSaving(true)
+
+    try {
+      const updated = await userService.updateMe({
+        fullName: cleanName,
+        // An empty string clears the stored phone on the backend
+        phone: cleanPhone,
+      })
+
+      setUserProfile(updated)
+
+      // Keep the sidebar/topbar display name in sync immediately
+      dispatch(updateUserProfile({ fullName: updated.fullName }))
+
+      // Keep the cached display settings in sync as well
+      try {
+        const currentSettings = JSON.parse(
+          localStorage.getItem('servicehub_settings') || '{}',
+        )
+        localStorage.setItem(
+          'servicehub_settings',
+          JSON.stringify({
+            ...currentSettings,
+            displayName: updated.fullName,
+            email: updated.email,
+            department: updated.department?.name || 'Information Technology',
+          }),
+        )
+      } catch {
+        // ignore
+      }
+
+      setSuccessMessage('Profile updated successfully.')
+      setIsEditing(false)
+      setFormFullName('')
+      setFormPhone('')
+    } catch (err: unknown) {
+      setErrorMessage(
+        extractUserErrorMessage(err, 'Failed to update profile via /api/users/me.'),
+      )
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
   const roleBadge = getRoleBadge(userProfile?.role || authUser?.role)
   const RoleIcon = roleBadge.icon
   const avatarColors = getAvatarColor(userProfile?.id || authUser?.id || 1)
@@ -195,7 +289,7 @@ export default function SettingsPage() {
         {/* Page Heading */}
         <div className="section-heading">
           <div>
-            <h2 className="section-title">Settings &amp; Profile</h2>
+            <h2 className="section-title">Profile</h2>
             <p className="page-subtitle">
               View your authenticated user account details and credentials retrieved directly from the ServiceHub API.
             </p>

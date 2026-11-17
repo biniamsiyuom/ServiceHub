@@ -45,6 +45,11 @@ export interface CreateStaffRequest {
   departmentId?: number
 }
 
+export interface UpdateProfileRequest {
+  fullName?: string
+  phone?: string | null
+}
+
 export const FALLBACK_STAFF: UserProfileResponse[] = [
   {
     id: 1,
@@ -144,6 +149,15 @@ export const userService = {
    */
   async getMe(): Promise<UserProfileResponse> {
     const response = await api.get<UserProfileResponse>('/users/me')
+    return response.data
+  },
+
+  /**
+   * PATCH /api/users/me
+   * Updates the authenticated user's own profile (full name and phone).
+   */
+  async updateMe(data: UpdateProfileRequest): Promise<UserProfileResponse> {
+    const response = await api.patch<UserProfileResponse>('/users/me', data)
     return response.data
   },
 

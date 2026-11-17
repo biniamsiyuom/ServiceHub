@@ -56,7 +56,7 @@ const pageNames: Record<string, string> = {
   '/categories': 'Categories',
   '/departments': 'Departments',
   '/staff': 'Staff',
-  '/settings': 'Settings',
+  '/settings': 'Profile',
 }
 
 const activePage = pageNames[location.pathname] || 'Dashboard'
@@ -236,7 +236,7 @@ useEffect(() => {
           { name: 'Staff', icon: Users },
         ]
       : []),
-    { name: 'Settings', icon: Settings },
+    { name: 'Profile', icon: Settings },
   ]
 
   return (
@@ -265,7 +265,7 @@ useEffect(() => {
                   Categories: '/categories',
                   Departments: '/departments',
                   Staff: '/staff',
-                  Settings: '/settings',
+                  Profile: '/settings',
                 }
 
                 navigate(paths[item.name])
@@ -613,7 +613,7 @@ useEffect(() => {
 
         {activePage === 'Staff' && <StaffPage />}
 
-       {activePage === 'Settings' && <SettingsPage />}
+       {activePage === 'Profile' && <SettingsPage />}
       </main>
     </div>
   )
