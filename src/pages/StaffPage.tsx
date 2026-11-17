@@ -39,7 +39,7 @@ const DEPARTMENTS = [
 
 const AVATAR_COLORS = [
   { bg: '#e0e7ff', text: '#3730a3' }, // Indigo
-  { bg: '#dbeafe', text: '#1e40af' }, // Blue
+  { bg: '#e9eedf', text: '#4d6926' }, // Blue
   { bg: '#dcfce7', text: '#166534' }, // Green
   { bg: '#fef3c7', text: '#92400e' }, // Amber
   { bg: '#fce7f3', text: '#9d174d' }, // Pink
@@ -71,7 +71,7 @@ function getRoleBadge(role: string) {
       return {
         label: 'Manager',
         bg: '#e0f2fe',
-        color: '#0369a1',
+        color: '#59792c',
         border: '#bae6fd',
         icon: Briefcase,
       }
@@ -87,9 +87,9 @@ function getRoleBadge(role: string) {
     default:
       return {
         label: 'Employee',
-        bg: '#f1f5f9',
-        color: '#475569',
-        border: '#cbd5e1',
+        bg: '#f1f2e9',
+        color: '#5c5951',
+        border: '#d5d7c9',
         icon: User,
       }
   }
@@ -344,11 +344,11 @@ export default function StaffPage() {
             <ShieldAlert size={32} />
           </div>
 
-          <h2 style={{ fontSize: '24px', color: '#0f172a', marginBottom: '8px', fontWeight: 700 }}>
+          <h2 style={{ fontSize: '24px', color: '#2f2c33', marginBottom: '8px', fontWeight: 700 }}>
             Access Restricted
           </h2>
 
-          <p style={{ color: '#64748b', fontSize: '14px', lineHeight: 1.6, marginBottom: '24px' }}>
+          <p style={{ color: '#817e76', fontSize: '14px', lineHeight: 1.6, marginBottom: '24px' }}>
             The Staff Management directory contains personnel administrative tools and user records restricted to <strong>Administrator</strong> accounts. You are currently signed in as <strong>{authUser?.fullName || 'User'}</strong> ({authUser?.role || 'Standard Account'}).
           </p>
 
@@ -462,16 +462,16 @@ export default function StaffPage() {
               display: 'flex',
               alignItems: 'center',
               gap: '10px',
-              background: '#eff6ff',
-              color: '#1e40af',
-              border: '1px solid #bfdbfe',
+              background: '#eef2e5',
+              color: '#4d6926',
+              border: '1px solid #d5e0c4',
               padding: '12px 16px',
               borderRadius: '8px',
               marginBottom: '18px',
               fontSize: '13px',
             }}
           >
-            <Info size={18} color="#2563eb" style={{ flexShrink: 0 }} />
+            <Info size={18} color="#6f8a4f" style={{ flexShrink: 0 }} />
             <div>
               <strong>Limited Access Notice:</strong> The full user directory (<code>GET /api/users</code>) is restricted to <strong>ADMIN</strong> roles in accordance with backend security policies. Log in with an administrator account (e.g. <code>admin@servicehub.local</code>) for full staff management.
             </div>
@@ -490,16 +490,16 @@ export default function StaffPage() {
           <div
             style={{
               background: '#ffffff',
-              border: '1px solid #e2e8f0',
+              border: '1px solid #e6e7dc',
               borderRadius: '10px',
               padding: '14px 18px',
               boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
             }}
           >
-            <div style={{ fontSize: '12px', color: '#64748b', fontWeight: 600, textTransform: 'uppercase' }}>
+            <div style={{ fontSize: '12px', color: '#817e76', fontWeight: 600, textTransform: 'uppercase' }}>
               Total Directory Users
             </div>
-            <div style={{ fontSize: '24px', fontWeight: 700, color: '#0f172a', marginTop: '4px' }}>
+            <div style={{ fontSize: '24px', fontWeight: 700, color: '#2f2c33', marginTop: '4px' }}>
               {totalElements}
             </div>
             <div style={{ fontSize: '12px', color: '#16a34a', marginTop: '4px' }}>
@@ -510,19 +510,19 @@ export default function StaffPage() {
           <div
             style={{
               background: '#ffffff',
-              border: '1px solid #e2e8f0',
+              border: '1px solid #e6e7dc',
               borderRadius: '10px',
               padding: '14px 18px',
               boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
             }}
           >
-            <div style={{ fontSize: '12px', color: '#64748b', fontWeight: 600, textTransform: 'uppercase' }}>
+            <div style={{ fontSize: '12px', color: '#817e76', fontWeight: 600, textTransform: 'uppercase' }}>
               Technicians
             </div>
             <div style={{ fontSize: '24px', fontWeight: 700, color: '#b45309', marginTop: '4px' }}>
               {techCount}
             </div>
-            <div style={{ fontSize: '12px', color: '#64748b', marginTop: '4px' }}>
+            <div style={{ fontSize: '12px', color: '#817e76', marginTop: '4px' }}>
               Available for assignment
             </div>
           </div>
@@ -530,19 +530,19 @@ export default function StaffPage() {
           <div
             style={{
               background: '#ffffff',
-              border: '1px solid #e2e8f0',
+              border: '1px solid #e6e7dc',
               borderRadius: '10px',
               padding: '14px 18px',
               boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
             }}
           >
-            <div style={{ fontSize: '12px', color: '#64748b', fontWeight: 600, textTransform: 'uppercase' }}>
+            <div style={{ fontSize: '12px', color: '#817e76', fontWeight: 600, textTransform: 'uppercase' }}>
               Leadership &amp; Admins
             </div>
             <div style={{ fontSize: '24px', fontWeight: 700, color: '#6d28d9', marginTop: '4px' }}>
               {adminCount + managerCount}
             </div>
-            <div style={{ fontSize: '12px', color: '#64748b', marginTop: '4px' }}>
+            <div style={{ fontSize: '12px', color: '#817e76', marginTop: '4px' }}>
               {adminCount} Admins · {managerCount} Managers
             </div>
           </div>
@@ -550,19 +550,19 @@ export default function StaffPage() {
           <div
             style={{
               background: '#ffffff',
-              border: '1px solid #e2e8f0',
+              border: '1px solid #e6e7dc',
               borderRadius: '10px',
               padding: '14px 18px',
               boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
             }}
           >
-            <div style={{ fontSize: '12px', color: '#64748b', fontWeight: 600, textTransform: 'uppercase' }}>
+            <div style={{ fontSize: '12px', color: '#817e76', fontWeight: 600, textTransform: 'uppercase' }}>
               Employees
             </div>
-            <div style={{ fontSize: '24px', fontWeight: 700, color: '#334155', marginTop: '4px' }}>
+            <div style={{ fontSize: '24px', fontWeight: 700, color: '#4d4a45', marginTop: '4px' }}>
               {employeeCount}
             </div>
-            <div style={{ fontSize: '12px', color: '#64748b', marginTop: '4px' }}>
+            <div style={{ fontSize: '12px', color: '#817e76', marginTop: '4px' }}>
               General service users
             </div>
           </div>
@@ -576,10 +576,10 @@ export default function StaffPage() {
             gap: '12px',
             alignItems: 'center',
             marginBottom: '20px',
-            background: '#f8fafc',
+            background: '#f8f9f3',
             padding: '14px',
             borderRadius: '10px',
-            border: '1px solid #e2e8f0',
+            border: '1px solid #e6e7dc',
           }}
         >
           {/* Search Query */}
@@ -598,7 +598,7 @@ export default function StaffPage() {
 
           {/* Role Filter */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <label style={{ fontSize: '13px', color: '#64748b', fontWeight: 600 }}>Role:</label>
+            <label style={{ fontSize: '13px', color: '#817e76', fontWeight: 600 }}>Role:</label>
             <select
               value={roleFilter}
               onChange={(e) => {
@@ -608,7 +608,7 @@ export default function StaffPage() {
               style={{
                 padding: '8px 12px',
                 borderRadius: '8px',
-                border: '1px solid #cbd5e1',
+                border: '1px solid #d5d7c9',
                 fontSize: '13px',
                 background: '#ffffff',
               }}
@@ -623,7 +623,7 @@ export default function StaffPage() {
 
           {/* Active Status Filter */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <label style={{ fontSize: '13px', color: '#64748b', fontWeight: 600 }}>Status:</label>
+            <label style={{ fontSize: '13px', color: '#817e76', fontWeight: 600 }}>Status:</label>
             <select
               value={activeFilter}
               onChange={(e) => {
@@ -633,7 +633,7 @@ export default function StaffPage() {
               style={{
                 padding: '8px 12px',
                 borderRadius: '8px',
-                border: '1px solid #cbd5e1',
+                border: '1px solid #d5d7c9',
                 fontSize: '13px',
                 background: '#ffffff',
               }}
@@ -646,7 +646,7 @@ export default function StaffPage() {
 
           {/* Sort By */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <label style={{ fontSize: '13px', color: '#64748b', fontWeight: 600 }}>Sort:</label>
+            <label style={{ fontSize: '13px', color: '#817e76', fontWeight: 600 }}>Sort:</label>
             <select
               value={`${sortField}-${sortDirection}`}
               onChange={(e) => {
@@ -658,7 +658,7 @@ export default function StaffPage() {
               style={{
                 padding: '8px 12px',
                 borderRadius: '8px',
-                border: '1px solid #cbd5e1',
+                border: '1px solid #d5d7c9',
                 fontSize: '13px',
                 background: '#ffffff',
               }}
@@ -715,8 +715,8 @@ export default function StaffPage() {
                           {getInitials(member.fullName)}
                         </div>
                         <div>
-                          <div style={{ fontWeight: 600, color: '#0f172a' }}>{member.fullName}</div>
-                          <div style={{ fontSize: '11px', color: '#64748b' }}>ID #{member.id}</div>
+                          <div style={{ fontWeight: 600, color: '#2f2c33' }}>{member.fullName}</div>
+                          <div style={{ fontSize: '11px', color: '#817e76' }}>ID #{member.id}</div>
                         </div>
                       </div>
                     </td>
@@ -729,10 +729,10 @@ export default function StaffPage() {
                           alignItems: 'center',
                           gap: '6px',
                           fontSize: '13px',
-                          color: '#334155',
+                          color: '#4d4a45',
                         }}
                       >
-                        <Mail size={14} color="#64748b" />
+                        <Mail size={14} color="#817e76" />
                         <span>{member.email}</span>
                       </div>
                     </td>
@@ -745,10 +745,10 @@ export default function StaffPage() {
                           alignItems: 'center',
                           gap: '6px',
                           fontSize: '13px',
-                          color: member.phone ? '#334155' : '#94a3b8',
+                          color: member.phone ? '#4d4a45' : '#a4a198',
                         }}
                       >
-                        <Phone size={14} color="#64748b" />
+                        <Phone size={14} color="#817e76" />
                         <span>{member.phone || '—'}</span>
                       </div>
                     </td>
@@ -782,10 +782,10 @@ export default function StaffPage() {
                           alignItems: 'center',
                           gap: '6px',
                           fontSize: '13px',
-                          color: '#334155',
+                          color: '#4d4a45',
                         }}
                       >
-                        <Building size={14} color="#64748b" />
+                        <Building size={14} color="#817e76" />
                         <span>{member.department?.name || 'Unassigned'}</span>
                       </div>
                     </td>
@@ -799,9 +799,9 @@ export default function StaffPage() {
                           borderRadius: '12px',
                           fontSize: '11px',
                           fontWeight: 600,
-                          background: member.active ? '#dcfce7' : '#f1f5f9',
-                          color: member.active ? '#15803d' : '#64748b',
-                          border: `1px solid ${member.active ? '#86efac' : '#cbd5e1'}`,
+                          background: member.active ? '#dcfce7' : '#f1f2e9',
+                          color: member.active ? '#15803d' : '#817e76',
+                          border: `1px solid ${member.active ? '#86efac' : '#d5d7c9'}`,
                         }}
                       >
                         {member.active ? 'Active' : 'Inactive'}
@@ -809,7 +809,7 @@ export default function StaffPage() {
                     </td>
 
                     {/* Joined Date */}
-                    <td style={{ fontSize: '12px', color: '#64748b' }}>
+                    <td style={{ fontSize: '12px', color: '#817e76' }}>
                       {new Date(member.createdAt).toLocaleDateString(undefined, {
                         year: 'numeric',
                         month: 'short',
@@ -829,9 +829,9 @@ export default function StaffPage() {
                           gap: '4px',
                           padding: '6px 10px',
                           borderRadius: '6px',
-                          border: '1px solid #cbd5e1',
+                          border: '1px solid #d5d7c9',
                           background: '#ffffff',
-                          color: '#334155',
+                          color: '#4d4a45',
                           fontSize: '12px',
                           cursor: 'pointer',
                         }}
@@ -847,8 +847,8 @@ export default function StaffPage() {
           </table>
 
           {users.length === 0 && (
-            <div style={{ textAlign: 'center', padding: '40px 20px', color: '#64748b' }}>
-              <Users size={36} color="#94a3b8" style={{ marginBottom: '8px' }} />
+            <div style={{ textAlign: 'center', padding: '40px 20px', color: '#817e76' }}>
+              <Users size={36} color="#a4a198" style={{ marginBottom: '8px' }} />
               <div style={{ fontSize: '15px', fontWeight: 600 }}>No staff members found</div>
               <div style={{ fontSize: '13px', marginTop: '4px' }}>
                 Try adjusting your search criteria or role filters.
@@ -866,9 +866,9 @@ export default function StaffPage() {
               alignItems: 'center',
               marginTop: '18px',
               paddingTop: '14px',
-              borderTop: '1px solid #e2e8f0',
+              borderTop: '1px solid #e6e7dc',
               fontSize: '13px',
-              color: '#64748b',
+              color: '#817e76',
             }}
           >
             <div>
@@ -886,9 +886,9 @@ export default function StaffPage() {
                   gap: '4px',
                   padding: '6px 12px',
                   borderRadius: '6px',
-                  border: '1px solid #cbd5e1',
-                  background: page === 0 ? '#f1f5f9' : '#ffffff',
-                  color: page === 0 ? '#94a3b8' : '#334155',
+                  border: '1px solid #d5d7c9',
+                  background: page === 0 ? '#f1f2e9' : '#ffffff',
+                  color: page === 0 ? '#a4a198' : '#4d4a45',
                   cursor: page === 0 ? 'not-allowed' : 'pointer',
                 }}
               >
@@ -906,9 +906,9 @@ export default function StaffPage() {
                   gap: '4px',
                   padding: '6px 12px',
                   borderRadius: '6px',
-                  border: '1px solid #cbd5e1',
-                  background: page >= totalPages - 1 ? '#f1f5f9' : '#ffffff',
-                  color: page >= totalPages - 1 ? '#94a3b8' : '#334155',
+                  border: '1px solid #d5d7c9',
+                  background: page >= totalPages - 1 ? '#f1f2e9' : '#ffffff',
+                  color: page >= totalPages - 1 ? '#a4a198' : '#4d4a45',
                   cursor: page >= totalPages - 1 ? 'not-allowed' : 'pointer',
                 }}
               >
@@ -936,14 +936,14 @@ export default function StaffPage() {
                 marginBottom: '16px',
               }}
             >
-              <h2 style={{ margin: 0, fontSize: '20px', color: '#0f172a' }}>Staff Profile</h2>
+              <h2 style={{ margin: 0, fontSize: '20px', color: '#2f2c33' }}>Staff Profile</h2>
               <button
                 type="button"
                 onClick={() => setViewingUser(null)}
                 style={{
                   background: 'none',
                   border: 'none',
-                  color: '#64748b',
+                  color: '#817e76',
                   cursor: 'pointer',
                   padding: '4px',
                 }}
@@ -959,10 +959,10 @@ export default function StaffPage() {
                 alignItems: 'center',
                 gap: '14px',
                 padding: '16px',
-                background: '#f8fafc',
+                background: '#f8f9f3',
                 borderRadius: '10px',
                 marginBottom: '18px',
-                border: '1px solid #e2e8f0',
+                border: '1px solid #e6e7dc',
               }}
             >
               <div
@@ -983,10 +983,10 @@ export default function StaffPage() {
                 {getInitials(viewingUser.fullName)}
               </div>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: '18px', fontWeight: 700, color: '#0f172a' }}>
+                <div style={{ fontSize: '18px', fontWeight: 700, color: '#2f2c33' }}>
                   {viewingUser.fullName}
                 </div>
-                <div style={{ fontSize: '13px', color: '#64748b', marginTop: '2px' }}>
+                <div style={{ fontSize: '13px', color: '#817e76', marginTop: '2px' }}>
                   {viewingUser.email}
                 </div>
               </div>
@@ -998,9 +998,9 @@ export default function StaffPage() {
                     borderRadius: '12px',
                     fontSize: '11px',
                     fontWeight: 600,
-                    background: viewingUser.active ? '#dcfce7' : '#f1f5f9',
-                    color: viewingUser.active ? '#15803d' : '#64748b',
-                    border: `1px solid ${viewingUser.active ? '#86efac' : '#cbd5e1'}`,
+                    background: viewingUser.active ? '#dcfce7' : '#f1f2e9',
+                    color: viewingUser.active ? '#15803d' : '#817e76',
+                    border: `1px solid ${viewingUser.active ? '#86efac' : '#d5d7c9'}`,
                   }}
                 >
                   {viewingUser.active ? 'Active' : 'Inactive'}
@@ -1015,11 +1015,11 @@ export default function StaffPage() {
                   display: 'flex',
                   justifyContent: 'space-between',
                   padding: '10px 0',
-                  borderBottom: '1px solid #f1f5f9',
+                  borderBottom: '1px solid #f1f2e9',
                 }}
               >
-                <span style={{ color: '#64748b', fontWeight: 500 }}>System ID:</span>
-                <span style={{ fontWeight: 600, color: '#0f172a' }}>#{viewingUser.id}</span>
+                <span style={{ color: '#817e76', fontWeight: 500 }}>System ID:</span>
+                <span style={{ fontWeight: 600, color: '#2f2c33' }}>#{viewingUser.id}</span>
               </div>
 
               <div
@@ -1028,10 +1028,10 @@ export default function StaffPage() {
                   justifyContent: 'space-between',
                   alignItems: 'center',
                   padding: '10px 0',
-                  borderBottom: '1px solid #f1f5f9',
+                  borderBottom: '1px solid #f1f2e9',
                 }}
               >
-                <span style={{ color: '#64748b', fontWeight: 500 }}>Assigned Role:</span>
+                <span style={{ color: '#817e76', fontWeight: 500 }}>Assigned Role:</span>
                 {(() => {
                   const b = getRoleBadge(viewingUser.role)
                   const Icon = b.icon
@@ -1062,11 +1062,11 @@ export default function StaffPage() {
                   display: 'flex',
                   justifyContent: 'space-between',
                   padding: '10px 0',
-                  borderBottom: '1px solid #f1f5f9',
+                  borderBottom: '1px solid #f1f2e9',
                 }}
               >
-                <span style={{ color: '#64748b', fontWeight: 500 }}>Department:</span>
-                <span style={{ fontWeight: 600, color: '#0f172a' }}>
+                <span style={{ color: '#817e76', fontWeight: 500 }}>Department:</span>
+                <span style={{ fontWeight: 600, color: '#2f2c33' }}>
                   {viewingUser.department?.name || 'Unassigned'}
                 </span>
               </div>
@@ -1076,11 +1076,11 @@ export default function StaffPage() {
                   display: 'flex',
                   justifyContent: 'space-between',
                   padding: '10px 0',
-                  borderBottom: '1px solid #f1f5f9',
+                  borderBottom: '1px solid #f1f2e9',
                 }}
               >
-                <span style={{ color: '#64748b', fontWeight: 500 }}>Phone Number:</span>
-                <span style={{ fontWeight: 600, color: '#0f172a' }}>
+                <span style={{ color: '#817e76', fontWeight: 500 }}>Phone Number:</span>
+                <span style={{ fontWeight: 600, color: '#2f2c33' }}>
                   {viewingUser.phone || 'None recorded'}
                 </span>
               </div>
@@ -1090,11 +1090,11 @@ export default function StaffPage() {
                   display: 'flex',
                   justifyContent: 'space-between',
                   padding: '10px 0',
-                  borderBottom: '1px solid #f1f5f9',
+                  borderBottom: '1px solid #f1f2e9',
                 }}
               >
-                <span style={{ color: '#64748b', fontWeight: 500 }}>Account Created:</span>
-                <span style={{ fontWeight: 600, color: '#0f172a' }}>
+                <span style={{ color: '#817e76', fontWeight: 500 }}>Account Created:</span>
+                <span style={{ fontWeight: 600, color: '#2f2c33' }}>
                   {new Date(viewingUser.createdAt).toLocaleString()}
                 </span>
               </div>
@@ -1129,14 +1129,14 @@ export default function StaffPage() {
                 marginBottom: '16px',
               }}
             >
-              <h2 style={{ margin: 0, fontSize: '20px', color: '#0f172a' }}>Add New Staff Member</h2>
+              <h2 style={{ margin: 0, fontSize: '20px', color: '#2f2c33' }}>Add New Staff Member</h2>
               <button
                 type="button"
                 onClick={() => setShowAddModal(false)}
                 style={{
                   background: 'none',
                   border: 'none',
-                  color: '#64748b',
+                  color: '#817e76',
                   cursor: 'pointer',
                   padding: '4px',
                 }}
@@ -1145,7 +1145,7 @@ export default function StaffPage() {
               </button>
             </div>
 
-            <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '18px' }}>
+            <p style={{ fontSize: '13px', color: '#817e76', marginBottom: '18px' }}>
               Registers a new staff member into the ServiceHub database via <code>POST /api/auth/register</code>.
             </p>
 
@@ -1182,7 +1182,7 @@ export default function StaffPage() {
                     width: '100%',
                     padding: '10px 12px',
                     borderRadius: '8px',
-                    border: '1px solid #cbd5e1',
+                    border: '1px solid #d5d7c9',
                     fontSize: '14px',
                   }}
                 />
@@ -1203,7 +1203,7 @@ export default function StaffPage() {
                     width: '100%',
                     padding: '10px 12px',
                     borderRadius: '8px',
-                    border: '1px solid #cbd5e1',
+                    border: '1px solid #d5d7c9',
                     fontSize: '14px',
                   }}
                 />
@@ -1225,13 +1225,13 @@ export default function StaffPage() {
                       width: '100%',
                       padding: '10px 12px 10px 36px',
                       borderRadius: '8px',
-                      border: '1px solid #cbd5e1',
+                      border: '1px solid #d5d7c9',
                       fontSize: '14px',
                     }}
                   />
                   <Lock
                     size={16}
-                    color="#94a3b8"
+                    color="#a4a198"
                     style={{ position: 'absolute', left: '12px', top: '12px' }}
                   />
                 </div>
@@ -1251,7 +1251,7 @@ export default function StaffPage() {
                     width: '100%',
                     padding: '10px 12px',
                     borderRadius: '8px',
-                    border: '1px solid #cbd5e1',
+                    border: '1px solid #d5d7c9',
                     fontSize: '14px',
                   }}
                 />
@@ -1271,7 +1271,7 @@ export default function StaffPage() {
                     width: '100%',
                     padding: '10px 12px',
                     borderRadius: '8px',
-                    border: '1px solid #cbd5e1',
+                    border: '1px solid #d5d7c9',
                     fontSize: '14px',
                     background: '#ffffff',
                   }}

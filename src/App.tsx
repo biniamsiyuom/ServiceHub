@@ -128,6 +128,29 @@ const pendingRequests = statusCounts.pending
 const inProgressRequests = statusCounts.inProgress
 const completedRequests = statusCounts.completed
 
+const chartBars = [
+  { label: 'Total', value: totalRequests, tone: 'muted' },
+  { label: 'Pending', value: pendingRequests, tone: 'amber' },
+  { label: 'In Progress', value: inProgressRequests, tone: 'accent' },
+  { label: 'Completed', value: completedRequests, tone: 'soft' },
+]
+const chartMax = Math.max(...chartBars.map((bar) => bar.value), 1)
+
+const safeTotal = Math.max(totalRequests, 1)
+const pendingPct = Math.round((pendingRequests / safeTotal) * 100)
+const inProgressPct = Math.round((inProgressRequests / safeTotal) * 100)
+const completedPct = Math.round((completedRequests / safeTotal) * 100)
+
+const donutGradient =
+  totalRequests === 0
+    ? 'conic-gradient(#e9eee2 0% 100%)'
+    : `conic-gradient(
+        #c9a227 0% ${pendingPct}%,
+        #6f8a4f ${pendingPct}% ${pendingPct + inProgressPct}%,
+        #9cc456 ${pendingPct + inProgressPct}% ${pendingPct + inProgressPct + completedPct}%,
+        #e9eee2 ${pendingPct + inProgressPct + completedPct}% 100%
+      )`
+
 useEffect(() => {
   let isMounted = true
 
@@ -276,6 +299,17 @@ useEffect(() => {
           </div>
 
           <div className="topbar-actions">
+            {activePage === 'Dashboard' && (
+              <div className="topbar-search">
+                <Search size={17} />
+                <input
+                  className="topbar-search-input"
+                  placeholder="Search requests..."
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                />
+              </div>
+            )}
             <button
   className="notification-button"
   aria-label="Notifications"
@@ -374,6 +408,78 @@ useEffect(() => {
               </div>
             </section>
 
+            <section className="dashboard-panels">
+              <div className="content-card chart-card">
+                <div className="card-heading">
+                  <div>
+                    <h2 className="section-title">Request activity</h2>
+                    <p className="page-subtitle">
+                      Current workload across every service request.
+                    </p>
+                  </div>
+                  <span className="soft-chip">Live</span>
+                </div>
+
+                <div className="bar-chart">
+                  {chartBars.map((bar) => (
+                    <div className="bar-column" key={bar.label}>
+                      <span className="bar-value">{bar.value}</span>
+                      <div className="bar-track">
+                        <div
+                          className={`bar-fill ${bar.tone}`}
+                          style={{
+                            height: `${Math.max((bar.value / chartMax) * 100, 5)}%`,
+                          }}
+                        />
+                      </div>
+                      <span className="bar-label">{bar.label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="content-card overview-card">
+                <div className="card-heading">
+                  <div>
+                    <h2 className="section-title">Service overview</h2>
+                    <p className="page-subtitle">Share of requests by status.</p>
+                  </div>
+                </div>
+
+                <div className="overview-body">
+                  <div className="donut" style={{ background: donutGradient }}>
+                    <div className="donut-center">
+                      <strong>{totalRequests}</strong>
+                      <span>Total</span>
+                    </div>
+                  </div>
+
+                  <ul className="legend">
+                    <li>
+                      <span className="legend-dot pending" />
+                      <span>Pending</span>
+                      <strong>{pendingRequests}</strong>
+                    </li>
+                    <li>
+                      <span className="legend-dot progress" />
+                      <span>In progress</span>
+                      <strong>{inProgressRequests}</strong>
+                    </li>
+                    <li>
+                      <span className="legend-dot completed" />
+                      <span>Completed</span>
+                      <strong>{completedRequests}</strong>
+                    </li>
+                    <li>
+                      <span className="legend-dot other" />
+                      <span>Other</span>
+                      <strong>{Math.max(totalRequests - pendingRequests - inProgressRequests - completedRequests, 0)}</strong>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+
             <section className="content-card">
               <div className="section-heading">
                 <div>
@@ -389,16 +495,6 @@ useEffect(() => {
 >
   <Plus size={17} /> New Request
 </button>
-              </div>
-
-              <div className="search-area">
-                <Search size={19} />
-                <input
-                  className="search-input"
-                  placeholder="Search service requests..."
-                  value={search}
-                  onChange={(event) => setSearch(event.target.value)}
-                />
               </div>
 
               <div className="table-wrapper">

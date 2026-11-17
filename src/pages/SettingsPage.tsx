@@ -22,7 +22,7 @@ import { useAppSelector } from '../store/hooks'
 
 const AVATAR_COLORS = [
   { bg: '#e0e7ff', text: '#3730a3' }, // Indigo
-  { bg: '#dbeafe', text: '#1e40af' }, // Blue
+  { bg: '#e9eedf', text: '#4d6926' }, // Blue
   { bg: '#dcfce7', text: '#166534' }, // Green
   { bg: '#fef3c7', text: '#92400e' }, // Amber
   { bg: '#fce7f3', text: '#9d174d' }, // Pink
@@ -54,7 +54,7 @@ function getRoleBadge(role?: string) {
       return {
         label: 'Manager',
         bg: '#e0f2fe',
-        color: '#0369a1',
+        color: '#59792c',
         border: '#bae6fd',
         icon: Briefcase,
       }
@@ -70,9 +70,9 @@ function getRoleBadge(role?: string) {
     default:
       return {
         label: 'Employee',
-        bg: '#f1f5f9',
-        color: '#475569',
-        border: '#cbd5e1',
+        bg: '#f1f2e9',
+        color: '#5c5951',
+        border: '#d5d7c9',
         icon: User,
       }
   }
@@ -269,7 +269,7 @@ export default function SettingsPage() {
         <div
           style={{
             background: '#ffffff',
-            border: '1px solid #e2e8f0',
+            border: '1px solid #e6e7dc',
             borderRadius: '12px',
             padding: '24px',
             boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
@@ -283,7 +283,7 @@ export default function SettingsPage() {
               alignItems: 'center',
               gap: '16px',
               paddingBottom: '20px',
-              borderBottom: '1px solid #e2e8f0',
+              borderBottom: '1px solid #e6e7dc',
               marginBottom: '20px',
             }}
           >
@@ -311,7 +311,7 @@ export default function SettingsPage() {
 
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-                  <h3 style={{ margin: 0, fontSize: '20px', color: '#0f172a', fontWeight: 700 }}>
+                  <h3 style={{ margin: 0, fontSize: '20px', color: '#2f2c33', fontWeight: 700 }}>
                     {userProfile?.fullName || authUser?.fullName || 'Authenticated User'}
                   </h3>
 
@@ -325,9 +325,9 @@ export default function SettingsPage() {
                       borderRadius: '12px',
                       fontSize: '11px',
                       fontWeight: 600,
-                      background: userProfile?.active ?? true ? '#dcfce7' : '#f1f5f9',
-                      color: userProfile?.active ?? true ? '#15803d' : '#64748b',
-                      border: `1px solid ${userProfile?.active ?? true ? '#86efac' : '#cbd5e1'}`,
+                      background: userProfile?.active ?? true ? '#dcfce7' : '#f1f2e9',
+                      color: userProfile?.active ?? true ? '#15803d' : '#817e76',
+                      border: `1px solid ${userProfile?.active ?? true ? '#86efac' : '#d5d7c9'}`,
                     }}
                   >
                     ● {userProfile?.active ?? true ? 'Active Account' : 'Inactive'}
@@ -340,7 +340,7 @@ export default function SettingsPage() {
                     alignItems: 'center',
                     gap: '6px',
                     fontSize: '13px',
-                    color: '#64748b',
+                    color: '#817e76',
                     marginTop: '4px',
                   }}
                 >
@@ -383,10 +383,10 @@ export default function SettingsPage() {
             {/* User ID */}
             <div
               style={{
-                background: '#f8fafc',
+                background: '#f8f9f3',
                 padding: '12px 16px',
                 borderRadius: '8px',
-                border: '1px solid #e2e8f0',
+                border: '1px solid #e6e7dc',
               }}
             >
               <div
@@ -395,7 +395,7 @@ export default function SettingsPage() {
                   alignItems: 'center',
                   gap: '6px',
                   fontSize: '12px',
-                  color: '#64748b',
+                  color: '#817e76',
                   fontWeight: 600,
                   textTransform: 'uppercase',
                 }}
@@ -403,7 +403,7 @@ export default function SettingsPage() {
                 <Hash size={13} />
                 <span>User ID</span>
               </div>
-              <div style={{ fontSize: '15px', fontWeight: 600, color: '#0f172a', marginTop: '4px' }}>
+              <div style={{ fontSize: '15px', fontWeight: 600, color: '#2f2c33', marginTop: '4px' }}>
                 #{userProfile?.id || authUser?.id || '—'}
               </div>
             </div>
@@ -411,10 +411,10 @@ export default function SettingsPage() {
             {/* Department */}
             <div
               style={{
-                background: '#f8fafc',
+                background: '#f8f9f3',
                 padding: '12px 16px',
                 borderRadius: '8px',
-                border: '1px solid #e2e8f0',
+                border: '1px solid #e6e7dc',
               }}
             >
               <div
@@ -423,7 +423,7 @@ export default function SettingsPage() {
                   alignItems: 'center',
                   gap: '6px',
                   fontSize: '12px',
-                  color: '#64748b',
+                  color: '#817e76',
                   fontWeight: 600,
                   textTransform: 'uppercase',
                 }}
@@ -431,7 +431,7 @@ export default function SettingsPage() {
                 <Building size={13} />
                 <span>Department</span>
               </div>
-              <div style={{ fontSize: '15px', fontWeight: 600, color: '#0f172a', marginTop: '4px' }}>
+              <div style={{ fontSize: '15px', fontWeight: 600, color: '#2f2c33', marginTop: '4px' }}>
                 {userProfile?.department?.name || 'Information Technology'}
               </div>
             </div>
@@ -439,10 +439,10 @@ export default function SettingsPage() {
             {/* Phone */}
             <div
               style={{
-                background: '#f8fafc',
+                background: '#f8f9f3',
                 padding: '12px 16px',
                 borderRadius: '8px',
-                border: '1px solid #e2e8f0',
+                border: '1px solid #e6e7dc',
               }}
             >
               <div
@@ -451,7 +451,7 @@ export default function SettingsPage() {
                   alignItems: 'center',
                   gap: '6px',
                   fontSize: '12px',
-                  color: '#64748b',
+                  color: '#817e76',
                   fontWeight: 600,
                   textTransform: 'uppercase',
                 }}
@@ -459,7 +459,7 @@ export default function SettingsPage() {
                 <Phone size={13} />
                 <span>Phone Number</span>
               </div>
-              <div style={{ fontSize: '15px', fontWeight: 600, color: '#0f172a', marginTop: '4px' }}>
+              <div style={{ fontSize: '15px', fontWeight: 600, color: '#2f2c33', marginTop: '4px' }}>
                 {userProfile?.phone || 'Not recorded'}
               </div>
             </div>
@@ -467,10 +467,10 @@ export default function SettingsPage() {
             {/* Account Created Date */}
             <div
               style={{
-                background: '#f8fafc',
+                background: '#f8f9f3',
                 padding: '12px 16px',
                 borderRadius: '8px',
-                border: '1px solid #e2e8f0',
+                border: '1px solid #e6e7dc',
               }}
             >
               <div
@@ -479,7 +479,7 @@ export default function SettingsPage() {
                   alignItems: 'center',
                   gap: '6px',
                   fontSize: '12px',
-                  color: '#64748b',
+                  color: '#817e76',
                   fontWeight: 600,
                   textTransform: 'uppercase',
                 }}
@@ -487,7 +487,7 @@ export default function SettingsPage() {
                 <Calendar size={13} />
                 <span>Member Since</span>
               </div>
-              <div style={{ fontSize: '15px', fontWeight: 600, color: '#0f172a', marginTop: '4px' }}>
+              <div style={{ fontSize: '15px', fontWeight: 600, color: '#2f2c33', marginTop: '4px' }}>
                 {userProfile?.createdAt
                   ? new Date(userProfile.createdAt).toLocaleDateString(undefined, {
                       year: 'numeric',
@@ -505,15 +505,15 @@ export default function SettingsPage() {
               marginTop: '16px',
               padding: '10px 14px',
               borderRadius: '8px',
-              background: '#f1f5f9',
-              color: '#475569',
+              background: '#f1f2e9',
+              color: '#5c5951',
               fontSize: '12px',
               display: 'flex',
               alignItems: 'center',
               gap: '8px',
             }}
           >
-            <Shield size={14} color="#64748b" />
+            <Shield size={14} color="#817e76" />
             <span>
               Profile data is authenticated and fetched from <code>GET /api/users/me</code>. Role and department permissions are managed by system administrators.
             </span>

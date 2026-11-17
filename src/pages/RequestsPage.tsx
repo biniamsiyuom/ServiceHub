@@ -98,20 +98,20 @@ function getPriorityBadge(priority: Priority) {
       return { bg: '#fef3c7', text: '#b45309', border: '#fde68a' }
     case 'LOW':
     default:
-      return { bg: '#f1f5f9', text: '#475569', border: '#e2e8f0' }
+      return { bg: '#f1f2e9', text: '#5c5951', border: '#e6e7dc' }
   }
 }
 
 function getStatusBadge(status: RequestStatus) {
   switch (status) {
     case 'SUBMITTED':
-      return { bg: '#f1f5f9', text: '#334155', border: '#cbd5e1', label: 'Submitted' }
+      return { bg: '#f1f2e9', text: '#4d4a45', border: '#d5d7c9', label: 'Submitted' }
     case 'PENDING':
       return { bg: '#fef3c7', text: '#92400e', border: '#fde68a', label: 'Pending' }
     case 'ASSIGNED':
       return { bg: '#e0e7ff', text: '#3730a3', border: '#c7d2fe', label: 'Assigned' }
     case 'IN_PROGRESS':
-      return { bg: '#dbeafe', text: '#1d4ed8', border: '#bfdbfe', label: 'In Progress' }
+      return { bg: '#e9eedf', text: '#59792c', border: '#d5e0c4', label: 'In Progress' }
     case 'RESOLVED':
       return { bg: '#dcfce7', text: '#166534', border: '#bbf7d0', label: 'Resolved' }
     case 'CLOSED':
@@ -739,10 +739,10 @@ export default function RequestsPage() {
             gap: '12px',
             alignItems: 'center',
             marginBottom: '20px',
-            background: '#f8fafc',
+            background: '#f8f9f3',
             padding: '14px',
             borderRadius: '10px',
-            border: '1px solid #e2e8f0',
+            border: '1px solid #e6e7dc',
           }}
         >
           {/* Search Query */}
@@ -761,7 +761,7 @@ export default function RequestsPage() {
 
           {/* Status Filter */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <label style={{ fontSize: '13px', color: '#64748b', fontWeight: 600 }}>Status:</label>
+            <label style={{ fontSize: '13px', color: '#817e76', fontWeight: 600 }}>Status:</label>
             <select
               value={statusFilter}
               onChange={(e) => {
@@ -771,7 +771,7 @@ export default function RequestsPage() {
               style={{
                 padding: '8px 12px',
                 borderRadius: '8px',
-                border: '1px solid #cbd5e1',
+                border: '1px solid #d5d7c9',
                 fontSize: '13px',
                 background: '#ffffff',
               }}
@@ -788,7 +788,7 @@ export default function RequestsPage() {
 
           {/* Priority Filter */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <label style={{ fontSize: '13px', color: '#64748b', fontWeight: 600 }}>Priority:</label>
+            <label style={{ fontSize: '13px', color: '#817e76', fontWeight: 600 }}>Priority:</label>
             <select
               value={priorityFilter}
               onChange={(e) => {
@@ -798,7 +798,7 @@ export default function RequestsPage() {
               style={{
                 padding: '8px 12px',
                 borderRadius: '8px',
-                border: '1px solid #cbd5e1',
+                border: '1px solid #d5d7c9',
                 fontSize: '13px',
                 background: '#ffffff',
               }}
@@ -814,7 +814,7 @@ export default function RequestsPage() {
           {/* Category Filter */}
           {categories.length > 0 && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <label style={{ fontSize: '13px', color: '#64748b', fontWeight: 600 }}>Category:</label>
+              <label style={{ fontSize: '13px', color: '#817e76', fontWeight: 600 }}>Category:</label>
               <select
                 value={categoryFilter}
                 onChange={(e) => {
@@ -824,7 +824,7 @@ export default function RequestsPage() {
                 style={{
                   padding: '8px 12px',
                   borderRadius: '8px',
-                  border: '1px solid #cbd5e1',
+                  border: '1px solid #d5d7c9',
                   fontSize: '13px',
                   background: '#ffffff',
                 }}
@@ -863,18 +863,18 @@ export default function RequestsPage() {
                 return (
                   <tr key={req.id}>
                     {/* Reference # */}
-                    <td style={{ fontWeight: 700, color: '#1e293b' }}>
+                    <td style={{ fontWeight: 700, color: '#3a3740' }}>
                       {req.referenceNumber || `REQ-${req.id}`}
                     </td>
 
                     {/* Title & Location */}
                     <td>
-                      <div style={{ fontWeight: 600, color: '#0f172a' }}>{req.title}</div>
+                      <div style={{ fontWeight: 600, color: '#2f2c33' }}>{req.title}</div>
                       {req.location && (
                         <div
                           style={{
                             fontSize: '12px',
-                            color: '#64748b',
+                            color: '#817e76',
                             display: 'flex',
                             alignItems: 'center',
                             gap: '4px',
@@ -891,12 +891,12 @@ export default function RequestsPage() {
                     <td>
                       <span
                         style={{
-                          background: '#f1f5f9',
+                          background: '#f1f2e9',
                           padding: '4px 8px',
                           borderRadius: '6px',
                           fontSize: '12px',
                           fontWeight: 500,
-                          color: '#334155',
+                          color: '#4d4a45',
                         }}
                       >
                         {req.category?.name || 'General'}
@@ -908,7 +908,7 @@ export default function RequestsPage() {
                       <div style={{ fontSize: '13px', fontWeight: 600 }}>
                         {req.requester?.fullName || 'User'}
                       </div>
-                      <div style={{ fontSize: '11px', color: '#64748b' }}>
+                      <div style={{ fontSize: '11px', color: '#817e76' }}>
                         {req.requester?.email || ''}
                       </div>
                     </td>
@@ -922,7 +922,7 @@ export default function RequestsPage() {
                             alignItems: 'center',
                             gap: '5px',
                             fontSize: '12px',
-                            color: '#0369a1',
+                            color: '#59792c',
                             fontWeight: 600,
                           }}
                         >
@@ -930,7 +930,7 @@ export default function RequestsPage() {
                           <span>{req.assignedTo.fullName}</span>
                         </div>
                       ) : (
-                        <span style={{ fontSize: '12px', color: '#94a3b8', fontStyle: 'italic' }}>
+                        <span style={{ fontSize: '12px', color: '#a4a198', fontStyle: 'italic' }}>
                           Unassigned
                         </span>
                       )}
@@ -1028,7 +1028,7 @@ export default function RequestsPage() {
                             style={{
                               padding: '5px 10px',
                               fontSize: '12px',
-                              background: '#2563eb',
+                              background: '#6f8a4f',
                               color: '#ffffff',
                               display: 'inline-flex',
                               alignItems: 'center',
@@ -1090,9 +1090,9 @@ export default function RequestsPage() {
 
         {/* Empty Table Notice */}
         {requests.length === 0 && !isLoading && (
-          <div style={{ textAlign: 'center', padding: '40px 20px', color: '#64748b' }}>
+          <div style={{ textAlign: 'center', padding: '40px 20px', color: '#817e76' }}>
             <AlertTriangle size={36} style={{ margin: '0 auto 10px', opacity: 0.5 }} />
-            <h4 style={{ margin: '0 0 6px 0', fontSize: '15px', color: '#1e293b' }}>No Requests Found</h4>
+            <h4 style={{ margin: '0 0 6px 0', fontSize: '15px', color: '#3a3740' }}>No Requests Found</h4>
             <p style={{ margin: 0, fontSize: '13px' }}>
               No service requests matched the active search or filter criteria.
             </p>
@@ -1107,9 +1107,9 @@ export default function RequestsPage() {
             alignItems: 'center',
             marginTop: '20px',
             paddingTop: '16px',
-            borderTop: '1px solid #e2e8f0',
+            borderTop: '1px solid #e6e7dc',
             fontSize: '13px',
-            color: '#64748b',
+            color: '#817e76',
           }}
         >
           <div>
@@ -1159,7 +1159,7 @@ export default function RequestsPage() {
               <button
                 type="button"
                 onClick={() => setShowCreateModal(false)}
-                style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#64748b' }}
+                style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#817e76' }}
               >
                 <X size={20} />
               </button>
@@ -1182,7 +1182,7 @@ export default function RequestsPage() {
                       width: '100%',
                       padding: '10px 12px',
                       borderRadius: '8px',
-                      border: '1px solid #cbd5e1',
+                      border: '1px solid #d5d7c9',
                       fontSize: '14px',
                       boxSizing: 'border-box',
                     }}
@@ -1202,7 +1202,7 @@ export default function RequestsPage() {
                         width: '100%',
                         padding: '10px 12px',
                         borderRadius: '8px',
-                        border: '1px solid #cbd5e1',
+                        border: '1px solid #d5d7c9',
                         fontSize: '14px',
                         background: '#ffffff',
                         boxSizing: 'border-box',
@@ -1229,7 +1229,7 @@ export default function RequestsPage() {
                         width: '100%',
                         padding: '10px 12px',
                         borderRadius: '8px',
-                        border: '1px solid #cbd5e1',
+                        border: '1px solid #d5d7c9',
                         fontSize: '14px',
                         background: '#ffffff',
                         boxSizing: 'border-box',
@@ -1257,7 +1257,7 @@ export default function RequestsPage() {
                       width: '100%',
                       padding: '10px 12px',
                       borderRadius: '8px',
-                      border: '1px solid #cbd5e1',
+                      border: '1px solid #d5d7c9',
                       fontSize: '14px',
                       boxSizing: 'border-box',
                     }}
@@ -1278,7 +1278,7 @@ export default function RequestsPage() {
                       width: '100%',
                       padding: '10px 12px',
                       borderRadius: '8px',
-                      border: '1px solid #cbd5e1',
+                      border: '1px solid #d5d7c9',
                       fontSize: '14px',
                       boxSizing: 'border-box',
                       fontFamily: 'inherit',
@@ -1320,7 +1320,7 @@ export default function RequestsPage() {
               <button
                 type="button"
                 onClick={() => setEditingRequest(null)}
-                style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#64748b' }}
+                style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#817e76' }}
               >
                 <X size={20} />
               </button>
@@ -1342,7 +1342,7 @@ export default function RequestsPage() {
                       width: '100%',
                       padding: '10px 12px',
                       borderRadius: '8px',
-                      border: '1px solid #cbd5e1',
+                      border: '1px solid #d5d7c9',
                       fontSize: '14px',
                       boxSizing: 'border-box',
                     }}
@@ -1362,7 +1362,7 @@ export default function RequestsPage() {
                         width: '100%',
                         padding: '10px 12px',
                         borderRadius: '8px',
-                        border: '1px solid #cbd5e1',
+                        border: '1px solid #d5d7c9',
                         fontSize: '14px',
                         background: '#ffffff',
                         boxSizing: 'border-box',
@@ -1389,7 +1389,7 @@ export default function RequestsPage() {
                         width: '100%',
                         padding: '10px 12px',
                         borderRadius: '8px',
-                        border: '1px solid #cbd5e1',
+                        border: '1px solid #d5d7c9',
                         fontSize: '14px',
                         background: '#ffffff',
                         boxSizing: 'border-box',
@@ -1416,7 +1416,7 @@ export default function RequestsPage() {
                       width: '100%',
                       padding: '10px 12px',
                       borderRadius: '8px',
-                      border: '1px solid #cbd5e1',
+                      border: '1px solid #d5d7c9',
                       fontSize: '14px',
                       boxSizing: 'border-box',
                     }}
@@ -1436,7 +1436,7 @@ export default function RequestsPage() {
                       width: '100%',
                       padding: '10px 12px',
                       borderRadius: '8px',
-                      border: '1px solid #cbd5e1',
+                      border: '1px solid #d5d7c9',
                       fontSize: '14px',
                       boxSizing: 'border-box',
                       fontFamily: 'inherit',
@@ -1473,19 +1473,19 @@ export default function RequestsPage() {
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <UserCheck size={20} color="#2563eb" />
+                <UserCheck size={20} color="#6f8a4f" />
                 <h3 style={{ margin: 0, fontSize: '18px' }}>Assign Technician</h3>
               </div>
               <button
                 type="button"
                 onClick={() => setAssigningRequest(null)}
-                style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#64748b' }}
+                style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#817e76' }}
               >
                 <X size={20} />
               </button>
             </div>
 
-            <p style={{ fontSize: '13px', color: '#475569', marginBottom: '16px' }}>
+            <p style={{ fontSize: '13px', color: '#5c5951', marginBottom: '16px' }}>
               Assigning request <strong>{assigningRequest.referenceNumber}</strong> ({assigningRequest.title}) to an active technician.
             </p>
 
@@ -1502,7 +1502,7 @@ export default function RequestsPage() {
                     width: '100%',
                     padding: '10px 12px',
                     borderRadius: '8px',
-                    border: '1px solid #cbd5e1',
+                    border: '1px solid #d5d7c9',
                     fontSize: '14px',
                     background: '#ffffff',
                     boxSizing: 'border-box',
@@ -1549,7 +1549,7 @@ export default function RequestsPage() {
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Clock size={20} color="#2563eb" />
+                <Clock size={20} color="#6f8a4f" />
                 <h3 style={{ margin: 0, fontSize: '18px' }}>
                   {isTechnician ? 'Update Task Status (Technician)' : 'Update Status'}
                 </h3>
@@ -1557,17 +1557,17 @@ export default function RequestsPage() {
               <button
                 type="button"
                 onClick={() => setStatusChangingRequest(null)}
-                style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#64748b' }}
+                style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#817e76' }}
               >
                 <X size={20} />
               </button>
             </div>
 
-            <p style={{ fontSize: '13px', color: '#475569', marginBottom: '16px' }}>
+            <p style={{ fontSize: '13px', color: '#5c5951', marginBottom: '16px' }}>
               Current Status: <strong>{statusChangingRequest.status}</strong> for{' '}
               <strong>{statusChangingRequest.referenceNumber}</strong>.
               {isTechnician && (
-                <span style={{ display: 'block', color: '#2563eb', fontSize: '12px', marginTop: '4px' }}>
+                <span style={{ display: 'block', color: '#6f8a4f', fontSize: '12px', marginTop: '4px' }}>
                   Endpoint: <code>PATCH /api/technician/tasks/{statusChangingRequest.id}/status</code>
                 </span>
               )}
@@ -1587,7 +1587,7 @@ export default function RequestsPage() {
                       width: '100%',
                       padding: '10px 12px',
                       borderRadius: '8px',
-                      border: '1px solid #cbd5e1',
+                      border: '1px solid #d5d7c9',
                       fontSize: '14px',
                       background: '#ffffff',
                       boxSizing: 'border-box',
@@ -1647,7 +1647,7 @@ export default function RequestsPage() {
                       width: '100%',
                       padding: '10px 12px',
                       borderRadius: '8px',
-                      border: '1px solid #cbd5e1',
+                      border: '1px solid #d5d7c9',
                       fontSize: '14px',
                       boxSizing: 'border-box',
                       fontFamily: 'inherit',
@@ -1688,14 +1688,14 @@ export default function RequestsPage() {
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'flex-start',
-                borderBottom: '1px solid #e2e8f0',
+                borderBottom: '1px solid #e6e7dc',
                 paddingBottom: '14px',
                 marginBottom: '16px',
               }}
             >
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                  <span style={{ fontSize: '13px', fontWeight: 700, color: '#2563eb' }}>
+                  <span style={{ fontSize: '13px', fontWeight: 700, color: '#6f8a4f' }}>
                     {viewingRequest.referenceNumber || `#${viewingRequest.id}`}
                   </span>
                   <span
@@ -1721,13 +1721,13 @@ export default function RequestsPage() {
                     {viewingRequest.priority}
                   </span>
                 </div>
-                <h3 style={{ margin: 0, fontSize: '18px', color: '#0f172a' }}>{viewingRequest.title}</h3>
+                <h3 style={{ margin: 0, fontSize: '18px', color: '#2f2c33' }}>{viewingRequest.title}</h3>
               </div>
 
               <button
                 type="button"
                 onClick={() => setViewingRequest(null)}
-                style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#64748b' }}
+                style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#817e76' }}
               >
                 <X size={20} />
               </button>
@@ -1741,17 +1741,17 @@ export default function RequestsPage() {
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   padding: '12px 16px',
-                  background: '#eff6ff',
-                  border: '1px solid #bfdbfe',
+                  background: '#eef2e5',
+                  border: '1px solid #d5e0c4',
                   borderRadius: '8px',
                   marginBottom: '18px',
                 }}
               >
                 <div>
-                  <div style={{ fontWeight: 600, color: '#1e40af', fontSize: '13px' }}>
+                  <div style={{ fontWeight: 600, color: '#4d6926', fontSize: '13px' }}>
                     Assigned Task Action (Technician)
                   </div>
-                  <div style={{ fontSize: '12px', color: '#3b82f6', marginTop: '2px' }}>
+                  <div style={{ fontSize: '12px', color: '#8da06d', marginTop: '2px' }}>
                     {viewingRequest.status === 'ASSIGNED'
                       ? 'This task is assigned to you. Click to start work.'
                       : viewingRequest.status === 'IN_PROGRESS'
@@ -1773,7 +1773,7 @@ export default function RequestsPage() {
                         display: 'inline-flex',
                         alignItems: 'center',
                         gap: '6px',
-                        background: '#2563eb',
+                        background: '#6f8a4f',
                       }}
                     >
                       <Play size={13} />
@@ -1810,7 +1810,7 @@ export default function RequestsPage() {
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
                 gap: '12px',
-                background: '#f8fafc',
+                background: '#f8f9f3',
                 padding: '14px',
                 borderRadius: '10px',
                 marginBottom: '18px',
@@ -1818,49 +1818,49 @@ export default function RequestsPage() {
               }}
             >
               <div>
-                <span style={{ color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <span style={{ color: '#817e76', display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <User size={13} /> Requester:
                 </span>
-                <strong style={{ color: '#0f172a' }}>
+                <strong style={{ color: '#2f2c33' }}>
                   {viewingRequest.requester?.fullName || 'User'} ({viewingRequest.requester?.email || '—'})
                 </strong>
               </div>
 
               <div>
-                <span style={{ color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <span style={{ color: '#817e76', display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <UserCheck size={13} /> Technician:
                 </span>
-                <strong style={{ color: viewingRequest.assignedTo ? '#0284c7' : '#94a3b8' }}>
+                <strong style={{ color: viewingRequest.assignedTo ? '#0284c7' : '#a4a198' }}>
                   {viewingRequest.assignedTo?.fullName || 'Unassigned'}
                 </strong>
               </div>
 
               <div>
-                <span style={{ color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <span style={{ color: '#817e76', display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <Tag size={13} /> Category:
                 </span>
-                <strong style={{ color: '#0f172a' }}>{viewingRequest.category?.name || 'General'}</strong>
+                <strong style={{ color: '#2f2c33' }}>{viewingRequest.category?.name || 'General'}</strong>
               </div>
 
               <div>
-                <span style={{ color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <span style={{ color: '#817e76', display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <Building size={13} /> Department:
                 </span>
-                <strong style={{ color: '#0f172a' }}>{viewingRequest.department?.name || '—'}</strong>
+                <strong style={{ color: '#2f2c33' }}>{viewingRequest.department?.name || '—'}</strong>
               </div>
 
               <div>
-                <span style={{ color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <span style={{ color: '#817e76', display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <MapPin size={13} /> Location:
                 </span>
-                <strong style={{ color: '#0f172a' }}>{viewingRequest.location || '—'}</strong>
+                <strong style={{ color: '#2f2c33' }}>{viewingRequest.location || '—'}</strong>
               </div>
 
               <div>
-                <span style={{ color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <span style={{ color: '#817e76', display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <Clock size={13} /> Created At:
                 </span>
-                <strong style={{ color: '#0f172a' }}>
+                <strong style={{ color: '#2f2c33' }}>
                   {new Date(viewingRequest.createdAt).toLocaleString()}
                 </strong>
               </div>
@@ -1868,16 +1868,16 @@ export default function RequestsPage() {
 
             {/* Description */}
             <div style={{ marginBottom: '24px' }}>
-              <h4 style={{ fontSize: '14px', margin: '0 0 6px 0', color: '#475569' }}>Description</h4>
+              <h4 style={{ fontSize: '14px', margin: '0 0 6px 0', color: '#5c5951' }}>Description</h4>
               <div
                 style={{
                   background: '#ffffff',
-                  border: '1px solid #e2e8f0',
+                  border: '1px solid #e6e7dc',
                   padding: '12px 14px',
                   borderRadius: '8px',
                   fontSize: '14px',
                   lineHeight: '1.5',
-                  color: '#1e293b',
+                  color: '#3a3740',
                   whiteSpace: 'pre-wrap',
                 }}
               >
@@ -1886,16 +1886,16 @@ export default function RequestsPage() {
             </div>
 
             {/* COMMENTS SECTION */}
-            <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '18px' }}>
+            <div style={{ borderTop: '1px solid #e6e7dc', paddingTop: '18px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
-                <MessageSquare size={17} color="#2563eb" />
+                <MessageSquare size={17} color="#6f8a4f" />
                 <h4 style={{ margin: 0, fontSize: '15px' }}>Comments &amp; Activity ({comments.length})</h4>
               </div>
 
               {/* Comments List */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '16px' }}>
                 {loadingComments ? (
-                  <p style={{ fontSize: '13px', color: '#64748b' }}>Loading comments...</p>
+                  <p style={{ fontSize: '13px', color: '#817e76' }}>Loading comments...</p>
                 ) : comments.length > 0 ? (
                   comments.map((comment) => (
                     <div
@@ -1903,8 +1903,8 @@ export default function RequestsPage() {
                       style={{
                         padding: '12px',
                         borderRadius: '8px',
-                        background: comment.internal ? '#fefce8' : '#f8fafc',
-                        border: `1px solid ${comment.internal ? '#fef08a' : '#e2e8f0'}`,
+                        background: comment.internal ? '#fefce8' : '#f8f9f3',
+                        border: `1px solid ${comment.internal ? '#fef08a' : '#e6e7dc'}`,
                       }}
                     >
                       <div
@@ -1916,7 +1916,7 @@ export default function RequestsPage() {
                         }}
                       >
                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <strong style={{ fontSize: '13px', color: '#1e293b' }}>
+                          <strong style={{ fontSize: '13px', color: '#3a3740' }}>
                             {comment.author?.fullName || 'Staff'}
                           </strong>
                           {comment.internal && (
@@ -1938,18 +1938,18 @@ export default function RequestsPage() {
                           )}
                         </div>
 
-                        <small style={{ color: '#94a3b8', fontSize: '11px' }}>
+                        <small style={{ color: '#a4a198', fontSize: '11px' }}>
                           {new Date(comment.createdAt).toLocaleString()}
                         </small>
                       </div>
 
-                      <p style={{ margin: 0, fontSize: '13px', color: '#334155', whiteSpace: 'pre-wrap' }}>
+                      <p style={{ margin: 0, fontSize: '13px', color: '#4d4a45', whiteSpace: 'pre-wrap' }}>
                         {comment.content}
                       </p>
                     </div>
                   ))
                 ) : (
-                  <p style={{ fontSize: '13px', color: '#94a3b8', fontStyle: 'italic', margin: 0 }}>
+                  <p style={{ fontSize: '13px', color: '#a4a198', fontStyle: 'italic', margin: 0 }}>
                     No comments recorded yet.
                   </p>
                 )}
@@ -1968,7 +1968,7 @@ export default function RequestsPage() {
                     width: '100%',
                     padding: '10px 12px',
                     borderRadius: '8px',
-                    border: '1px solid #cbd5e1',
+                    border: '1px solid #d5d7c9',
                     fontSize: '13px',
                     boxSizing: 'border-box',
                     fontFamily: 'inherit',

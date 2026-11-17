@@ -393,11 +393,11 @@ export default function CategoriesPage() {
             <ShieldAlert size={32} />
           </div>
 
-          <h2 style={{ fontSize: '24px', color: '#0f172a', marginBottom: '8px', fontWeight: 700 }}>
+          <h2 style={{ fontSize: '24px', color: '#2f2c33', marginBottom: '8px', fontWeight: 700 }}>
             Access Restricted
           </h2>
 
-          <p style={{ color: '#64748b', fontSize: '14px', lineHeight: 1.6, marginBottom: '24px' }}>
+          <p style={{ color: '#817e76', fontSize: '14px', lineHeight: 1.6, marginBottom: '24px' }}>
             Service Categories administration is restricted to <strong>Administrator</strong> accounts. You are currently signed in as <strong>{authUser?.fullName || 'User'}</strong> ({authUser?.role || 'Standard Account'}).
           </p>
 
@@ -462,13 +462,13 @@ export default function CategoriesPage() {
               gap: '8px',
               padding: '10px 14px',
               borderRadius: '8px',
-              background: '#f1f5f9',
-              color: '#475569',
+              background: '#f1f2e9',
+              color: '#5c5951',
               fontSize: '13px',
               marginBottom: '18px',
             }}
           >
-            <Info size={16} color="#64748b" />
+            <Info size={16} color="#817e76" />
             <span>
               You are signed in as a viewer. Administrator rights are required to create, edit, or delete categories.
             </span>
@@ -555,7 +555,7 @@ export default function CategoriesPage() {
           </div>
 
           {/* Active / Inactive Tabs */}
-          <div style={{ display: 'flex', gap: '6px', background: '#f1f5f9', padding: '4px', borderRadius: '8px' }}>
+          <div style={{ display: 'flex', gap: '6px', background: '#f1f2e9', padding: '4px', borderRadius: '8px' }}>
             <button
               type="button"
               onClick={() => setActiveTab('ALL')}
@@ -567,7 +567,7 @@ export default function CategoriesPage() {
                 fontWeight: 600,
                 cursor: 'pointer',
                 background: activeTab === 'ALL' ? '#ffffff' : 'transparent',
-                color: activeTab === 'ALL' ? '#1e293b' : '#64748b',
+                color: activeTab === 'ALL' ? '#3a3740' : '#817e76',
                 boxShadow: activeTab === 'ALL' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
                 transition: 'all 0.15s ease',
               }}
@@ -585,7 +585,7 @@ export default function CategoriesPage() {
                 fontWeight: 600,
                 cursor: 'pointer',
                 background: activeTab === 'ACTIVE' ? '#ffffff' : 'transparent',
-                color: activeTab === 'ACTIVE' ? '#1e293b' : '#64748b',
+                color: activeTab === 'ACTIVE' ? '#3a3740' : '#817e76',
                 boxShadow: activeTab === 'ACTIVE' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
                 transition: 'all 0.15s ease',
               }}
@@ -603,7 +603,7 @@ export default function CategoriesPage() {
                 fontWeight: 600,
                 cursor: 'pointer',
                 background: activeTab === 'INACTIVE' ? '#ffffff' : 'transparent',
-                color: activeTab === 'INACTIVE' ? '#1e293b' : '#64748b',
+                color: activeTab === 'INACTIVE' ? '#3a3740' : '#817e76',
                 boxShadow: activeTab === 'INACTIVE' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
                 transition: 'all 0.15s ease',
               }}
@@ -618,8 +618,8 @@ export default function CategoriesPage() {
           <form
             onSubmit={handleSubmit}
             style={{
-              background: '#f8fafc',
-              border: '1px solid #cbd5e1',
+              background: '#f8f9f3',
+              border: '1px solid #d5d7c9',
               padding: '22px',
               borderRadius: '12px',
               marginBottom: '28px',
@@ -648,7 +648,7 @@ export default function CategoriesPage() {
                     width: '100%',
                     padding: '10px 14px',
                     borderRadius: '8px',
-                    border: '1px solid #cbd5e1',
+                    border: '1px solid #d5d7c9',
                     fontSize: '14px',
                     boxSizing: 'border-box',
                   }}
@@ -670,7 +670,7 @@ export default function CategoriesPage() {
                     width: '100%',
                     padding: '10px 14px',
                     borderRadius: '8px',
-                    border: '1px solid #cbd5e1',
+                    border: '1px solid #d5d7c9',
                     fontSize: '14px',
                     boxSizing: 'border-box',
                   }}
@@ -731,8 +731,8 @@ export default function CategoriesPage() {
                   minHeight: '230px',
                   boxSizing: 'border-box',
                   opacity: category.active ? 1 : 0.72,
-                  borderColor: category.active ? '#e2e8f0' : '#cbd5e1',
-                  background: category.active ? '#ffffff' : '#f8fafc',
+                  borderColor: category.active ? '#e6e7dc' : '#d5d7c9',
+                  background: category.active ? '#ffffff' : '#f8f9f3',
                   position: 'relative',
                 }}
               >
@@ -750,9 +750,9 @@ export default function CategoriesPage() {
                     textTransform: 'uppercase',
                     padding: '3px 8px',
                     borderRadius: '12px',
-                    background: category.active ? '#ecfdf5' : '#f1f5f9',
-                    color: category.active ? '#059669' : '#64748b',
-                    border: `1px solid ${category.active ? '#a7f3d0' : '#e2e8f0'}`,
+                    background: category.active ? '#ecfdf5' : '#f1f2e9',
+                    color: category.active ? '#059669' : '#817e76',
+                    border: `1px solid ${category.active ? '#a7f3d0' : '#e6e7dc'}`,
                   }}
                 >
                   <span
@@ -760,7 +760,7 @@ export default function CategoriesPage() {
                       width: '6px',
                       height: '6px',
                       borderRadius: '50%',
-                      background: category.active ? '#10b981' : '#94a3b8',
+                      background: category.active ? '#10b981' : '#a4a198',
                     }}
                   />
                   {category.active ? 'Active' : 'Inactive'}
@@ -777,8 +777,8 @@ export default function CategoriesPage() {
                       width: '56px',
                       height: '56px',
                       borderRadius: '12px',
-                      background: category.active ? '#eff6ff' : '#e2e8f0',
-                      color: category.active ? '#2563eb' : '#64748b',
+                      background: category.active ? '#eef2e5' : '#e6e7dc',
+                      color: category.active ? '#6f8a4f' : '#817e76',
                       marginBottom: '12px',
                     }}
                   >
@@ -791,7 +791,7 @@ export default function CategoriesPage() {
                       fontSize: '16px',
                       fontWeight: 700,
                       marginBottom: '6px',
-                      color: '#0f172a',
+                      color: '#2f2c33',
                     }}
                   >
                     {category.name}
@@ -801,7 +801,7 @@ export default function CategoriesPage() {
                     <p
                       style={{
                         fontSize: '12px',
-                        color: '#64748b',
+                        color: '#817e76',
                         margin: '0 0 12px 0',
                         lineHeight: 1.45,
                         display: '-webkit-box',
@@ -814,7 +814,7 @@ export default function CategoriesPage() {
                       {category.description}
                     </p>
                   ) : (
-                    <p style={{ fontSize: '12px', color: '#94a3b8', fontStyle: 'italic', margin: '0 0 12px 0' }}>
+                    <p style={{ fontSize: '12px', color: '#a4a198', fontStyle: 'italic', margin: '0 0 12px 0' }}>
                       No description provided
                     </p>
                   )}
@@ -825,11 +825,11 @@ export default function CategoriesPage() {
                   <div style={{ textAlign: 'center', marginBottom: '14px' }}>
                     <span
                       style={{
-                        background: '#f1f5f9',
+                        background: '#f1f2e9',
                         padding: '4px 10px',
                         borderRadius: '20px',
                         fontSize: '12px',
-                        color: '#475569',
+                        color: '#5c5951',
                         fontWeight: 600,
                         display: 'inline-flex',
                         alignItems: 'center',
@@ -877,8 +877,8 @@ export default function CategoriesPage() {
                               onClick={() => setDeleteConfirmId(null)}
                               style={{
                                 background: '#ffffff',
-                                color: '#475569',
-                                border: '1px solid #cbd5e1',
+                                color: '#5c5951',
+                                border: '1px solid #d5d7c9',
                                 borderRadius: '6px',
                                 padding: '4px 10px',
                                 fontSize: '11px',
@@ -923,9 +923,9 @@ export default function CategoriesPage() {
                               padding: '6px 10px',
                               fontSize: '12px',
                               borderRadius: '8px',
-                              border: '1px solid #cbd5e1',
+                              border: '1px solid #d5d7c9',
                               background: '#ffffff',
-                              color: category.active ? '#475569' : '#059669',
+                              color: category.active ? '#5c5951' : '#059669',
                               cursor: 'pointer',
                             }}
                           >
@@ -965,9 +965,9 @@ export default function CategoriesPage() {
 
         {/* Empty state */}
         {filteredCategories.length === 0 && !isLoading && (
-          <div style={{ textAlign: 'center', padding: '48px 20px', color: '#64748b' }}>
+          <div style={{ textAlign: 'center', padding: '48px 20px', color: '#817e76' }}>
             <Layers size={40} style={{ margin: '0 auto 12px', opacity: 0.4 }} />
-            <h4 style={{ margin: '0 0 6px 0', fontSize: '16px', color: '#334155' }}>
+            <h4 style={{ margin: '0 0 6px 0', fontSize: '16px', color: '#4d4a45' }}>
               No Categories Found
             </h4>
             <p style={{ margin: 0, fontSize: '14px' }}>

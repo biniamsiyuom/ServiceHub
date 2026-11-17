@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import {
   Wrench,
-  ShieldCheck,
   Lock,
   Mail,
   Eye,
@@ -32,12 +31,6 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [showForgotModal, setShowForgotModal] = useState(false)
-
-  const handleFillDemo = () => {
-    setEmail('admin@servicehub.local')
-    setPassword('Password123!')
-    setErrorMessage(null)
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -109,155 +102,138 @@ export default function LoginPage() {
       <div className="login-bg-decor login-bg-decor-1" />
       <div className="login-bg-decor login-bg-decor-2" />
 
-      <div className="login-card">
-        {/* Header */}
-        <div className="login-header">
-          <div className="login-brand">
+      <div className="login-shell">
+        {/* Left welcome panel */}
+        <aside className="login-showcase">
+          <div className="showcase-orb showcase-orb-1" />
+          <div className="showcase-orb showcase-orb-2" />
+
+          <div className="login-brand login-brand-light">
             <div className="login-brand-icon">
               <Wrench size={26} />
             </div>
             <span>Service</span>Hub
           </div>
 
-          <div>
-            <span className="admin-badge">
-              <ShieldCheck size={14} /> Admin Portal
-            </span>
+          <div className="showcase-body">
+            <h1 className="showcase-title">Welcome to ServiceHub.</h1>
+            <p className="showcase-copy">
+              Your service desk, in one calm and secure place.
+            </p>
+          </div>
+        </aside>
+
+        {/* Right sign-in panel */}
+        <main className="login-panel">
+          <div className="login-header">
+            <h2 className="login-title">Welcome back</h2>
+            <p className="login-subtitle">
+              Sign in to manage requests, services, and operations.
+            </p>
           </div>
 
-          <h1 className="login-title">Sign In to Dashboard</h1>
-          <p className="login-subtitle">
-            Welcome back! Please enter your administrator credentials to manage requests, services, and operations.
-          </p>
-        </div>
-
-        {/* Demo Credentials Quick Fill Banner */}
-        <div className="demo-credentials-box">
-          <div className="demo-credentials-header">
-            <span>Demo Administrator Access</span>
-            <button
-              type="button"
-              className="demo-fill-btn"
-              onClick={handleFillDemo}
-            >
-              Auto-fill Demo
-            </button>
-          </div>
-          <div className="demo-credentials-info">
-            <div>Email: <strong>admin@servicehub.local</strong></div>
-            <div>Password: <strong>Password123!</strong></div>
-          </div>
-        </div>
-
-        {/* Error Alert */}
-        {errorMessage && (
-          <div className="login-alert" role="alert">
-            <AlertCircle size={18} style={{ flexShrink: 0, marginTop: '2px' }} />
-            <div>{errorMessage}</div>
-          </div>
-        )}
-
-        {/* Form */}
-        <form className="login-form" onSubmit={handleSubmit}>
-          <div className="form-field">
-            <label className="form-label" htmlFor="email-input">
-              Admin Email
-            </label>
-            <div className="input-wrapper">
-              <span className="input-icon-left">
-                <Mail size={18} />
-              </span>
-              <input
-                id="email-input"
-                className="login-input"
-                type="email"
-                placeholder="admin@servicehub.local"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                autoComplete="email"
-                disabled={isLoading}
-                required
-              />
+          {/* Error Alert */}
+          {errorMessage && (
+            <div className="login-alert" role="alert">
+              <AlertCircle size={18} style={{ flexShrink: 0, marginTop: '2px' }} />
+              <div>{errorMessage}</div>
             </div>
-          </div>
+          )}
 
-          <div className="form-field">
-            <label className="form-label" htmlFor="password-input">
-              Password
-            </label>
-            <div className="input-wrapper">
-              <span className="input-icon-left">
-                <Lock size={18} />
-              </span>
-              <input
-                id="password-input"
-                className="login-input"
-                type={showPassword ? 'text' : 'password'}
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                autoComplete="current-password"
-                disabled={isLoading}
-                required
-              />
+          {/* Form */}
+          <form className="login-form" onSubmit={handleSubmit}>
+            <div className="form-field">
+              <label className="form-label" htmlFor="email-input">
+                Email
+              </label>
+              <div className="input-wrapper">
+                <span className="input-icon-left">
+                  <Mail size={18} />
+                </span>
+                <input
+                  id="email-input"
+                  className="login-input"
+                  type="email"
+                  placeholder="you@servicehub.local"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  autoComplete="email"
+                  disabled={isLoading}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="form-field">
+              <label className="form-label" htmlFor="password-input">
+                Password
+              </label>
+              <div className="input-wrapper">
+                <span className="input-icon-left">
+                  <Lock size={18} />
+                </span>
+                <input
+                  id="password-input"
+                  className="login-input"
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  autoComplete="current-password"
+                  disabled={isLoading}
+                  required
+                />
+                <button
+                  type="button"
+                  className="toggle-password-btn"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+            </div>
+
+            <div className="form-options">
+              <label className="remember-label">
+                <input
+                  type="checkbox"
+                  className="remember-checkbox"
+                  checked={remember}
+                  onChange={(e) => setRemember(e.target.checked)}
+                  disabled={isLoading}
+                />
+                Remember my email
+              </label>
+
               <button
                 type="button"
-                className="toggle-password-btn"
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                className="forgot-password-link"
+                onClick={() => setShowForgotModal(true)}
               >
-                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                Forgot password?
               </button>
             </div>
-          </div>
-
-          <div className="form-options">
-            <label className="remember-label">
-              <input
-                type="checkbox"
-                className="remember-checkbox"
-                checked={remember}
-                onChange={(e) => setRemember(e.target.checked)}
-                disabled={isLoading}
-              />
-              Remember my email
-            </label>
 
             <button
-              type="button"
-              className="forgot-password-link"
-              onClick={() => setShowForgotModal(true)}
+              type="submit"
+              className="submit-btn"
+              disabled={isLoading}
             >
-              Forgot password?
+              {isLoading ? (
+                <>
+                  <Loader2 size={18} className="spinner" />
+                  <span>Signing in...</span>
+                </>
+              ) : (
+                <>
+                  <span>Sign In</span>
+                  <ArrowRight size={18} />
+                </>
+              )}
             </button>
-          </div>
-
-          <button
-            type="submit"
-            className="submit-btn"
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <>
-                <Loader2 size={18} className="spinner" />
-                <span>Authenticating...</span>
-              </>
-            ) : (
-              <>
-                <span>Sign In to Portal</span>
-                <ArrowRight size={18} />
-              </>
-            )}
-          </button>
-        </form>
-
-        {/* Security Notice Footer */}
-        <div className="login-footer">
-          <div className="security-badge">
-            <ShieldCheck size={15} />
-            <span>Secure Admin Portal &bull; Protected Access Only</span>
-          </div>
-        </div>
+          </form>
+        </main>
       </div>
 
       {/* Forgot Password Modal */}
@@ -266,25 +242,19 @@ export default function LoginPage() {
           <div className="login-modal" onClick={(e) => e.stopPropagation()}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
               <KeyRound size={22} color="#60a5fa" />
-              <h3>Password Reset Notice</h3>
+              <h3>Reset your password</h3>
             </div>
             <p>
-              As this is an enterprise administrator portal, credential resets must be initiated through your system administrator or by using the demo credentials provided above:
+              Password resets for the administrator portal must be initiated
+              through your system administrator.
             </p>
-            <div style={{ background: '#0f172a', padding: '12px', borderRadius: '8px', marginBottom: '18px', fontSize: '13px', color: '#93c5fd' }}>
-              <div>Demo Admin: <strong>admin@servicehub.local</strong></div>
-              <div>Demo Password: <strong>Password123!</strong></div>
-            </div>
             <button
               type="button"
               className="btn"
               style={{ width: '100%' }}
-              onClick={() => {
-                handleFillDemo()
-                setShowForgotModal(false)
-              }}
+              onClick={() => setShowForgotModal(false)}
             >
-              Auto-fill Demo &amp; Close
+              Close
             </button>
           </div>
         </div>
