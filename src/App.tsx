@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import RequestsPage from './pages/RequestsPage'
 import CategoriesPage from './pages/CategoriesPage'
+import DepartmentsPage from './pages/DepartmentsPage'
 import StaffPage from './pages/StaffPage'
 import SettingsPage from './pages/SettingsPage'
 import { requestService } from './services/requestService'
@@ -9,6 +10,7 @@ import {
   LayoutDashboard,
   ClipboardList,
   Layers,
+  Building2,
   Users,
   Settings,
   Wrench,
@@ -43,7 +45,7 @@ const handleLogout = () => {
 }
 
 useEffect(() => {
-  if (!isAdmin && (location.pathname === '/staff' || location.pathname === '/categories')) {
+  if (!isAdmin && (location.pathname === '/staff' || location.pathname === '/categories' || location.pathname === '/departments')) {
     navigate('/', { replace: true })
   }
 }, [isAdmin, location.pathname, navigate])
@@ -52,6 +54,7 @@ const pageNames: Record<string, string> = {
   '/': 'Dashboard',
   '/requests': 'Service Requests',
   '/categories': 'Categories',
+  '/departments': 'Departments',
   '/staff': 'Staff',
   '/settings': 'Settings',
 }
@@ -229,6 +232,7 @@ useEffect(() => {
     ...(isAdmin
       ? [
           { name: 'Categories', icon: Layers },
+          { name: 'Departments', icon: Building2 },
           { name: 'Staff', icon: Users },
         ]
       : []),
@@ -259,6 +263,7 @@ useEffect(() => {
                   Dashboard: '/',
                   'Service Requests': '/requests',
                   Categories: '/categories',
+                  Departments: '/departments',
                   Staff: '/staff',
                   Settings: '/settings',
                 }
@@ -603,6 +608,8 @@ useEffect(() => {
         {activePage === 'Service Requests' && <RequestsPage />}
 
         {activePage === 'Categories' && <CategoriesPage />}
+
+        {activePage === 'Departments' && <DepartmentsPage />}
 
         {activePage === 'Staff' && <StaffPage />}
 

@@ -81,6 +81,12 @@ function getCategoryIcon(name: string) {
   return Layers
 }
 
+function formatDate(value: string) {
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return '—'
+  return date.toLocaleDateString()
+}
+
 export default function CategoriesPage() {
   const navigate = useNavigate()
   const authUser = useAppSelector((state) => state.auth.user)
@@ -710,257 +716,129 @@ export default function CategoriesPage() {
           </form>
         )}
 
-        {/* Categories Cards Grid */}
-        <div className="category-grid">
-          {filteredCategories.map((category) => {
-            const Icon = getCategoryIcon(category.name)
-            const count = requests.filter(
-              (r) => r.category?.toLowerCase() === category.name.toLowerCase(),
-            ).length
-            const isConfirmingDelete = deleteConfirmId === category.id
+        {/* Categories Table */}
+        <div className="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Category</th>
+                <th>Status</th>
+                <th>Requests</th>
+                <th>Created</th>
+                <th style={{ textAlign: 'right' }}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredCategories.map((category) => {
+                const Icon = getCategoryIcon(category.name)
+                const count = requests.filter(
+                  (r) => r.category?.toLowerCase() === category.name.toLowerCase(),
+                ).length
+                const isConfirmingDelete = deleteConfirmId === category.id
 
-            return (
-              <div
-                className="category-card"
-                key={category.id || category.name}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  minHeight: '230px',
-                  boxSizing: 'border-box',
-                  opacity: category.active ? 1 : 0.72,
-                  borderColor: category.active ? '#e6e7dc' : '#d5d7c9',
-                  background: category.active ? '#ffffff' : '#f8f9f3',
-                  position: 'relative',
-                }}
-              >
-                {/* Status indicator badge */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '12px',
-                    right: '12px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '4px',
-                    fontSize: '11px',
-                    fontWeight: 700,
-                    textTransform: 'uppercase',
-                    padding: '3px 8px',
-                    borderRadius: '12px',
-                    background: category.active ? '#ecfdf5' : '#f1f2e9',
-                    color: category.active ? '#059669' : '#817e76',
-                    border: `1px solid ${category.active ? '#a7f3d0' : '#e6e7dc'}`,
-                  }}
-                >
-                  <span
-                    style={{
-                      width: '6px',
-                      height: '6px',
-                      borderRadius: '50%',
-                      background: category.active ? '#10b981' : '#a4a198',
-                    }}
-                  />
-                  {category.active ? 'Active' : 'Inactive'}
-                </div>
+                return (
+                  <tr key={category.id || category.name}>
+                    <td style={{ fontWeight: 700, color: '#3a3740' }}>#{category.id}</td>
 
-                {/* Card Top: Icon & Details */}
-                <div style={{ width: '100%', textAlign: 'center', marginTop: '10px' }}>
-                  <div
-                    className="category-icon"
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: '56px',
-                      height: '56px',
-                      borderRadius: '12px',
-                      background: category.active ? '#eef2e5' : '#e6e7dc',
-                      color: category.active ? '#6f8a4f' : '#817e76',
-                      marginBottom: '12px',
-                    }}
-                  >
-                    <Icon size={28} />
-                  </div>
-
-                  <div
-                    className="category-name"
-                    style={{
-                      fontSize: '16px',
-                      fontWeight: 700,
-                      marginBottom: '6px',
-                      color: '#2f2c33',
-                    }}
-                  >
-                    {category.name}
-                  </div>
-
-                  {category.description ? (
-                    <p
-                      style={{
-                        fontSize: '12px',
-                        color: '#817e76',
-                        margin: '0 0 12px 0',
-                        lineHeight: 1.45,
-                        display: '-webkit-box',
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical',
-                        overflow: 'hidden',
-                      }}
-                      title={category.description}
-                    >
-                      {category.description}
-                    </p>
-                  ) : (
-                    <p style={{ fontSize: '12px', color: '#a4a198', fontStyle: 'italic', margin: '0 0 12px 0' }}>
-                      No description provided
-                    </p>
-                  )}
-                </div>
-
-                {/* Card Bottom: Metric & Action Buttons */}
-                <div style={{ width: '100%', marginTop: 'auto' }}>
-                  <div style={{ textAlign: 'center', marginBottom: '14px' }}>
-                    <span
-                      style={{
-                        background: '#f1f2e9',
-                        padding: '4px 10px',
-                        borderRadius: '20px',
-                        fontSize: '12px',
-                        color: '#5c5951',
-                        fontWeight: 600,
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '5px',
-                      }}
-                    >
-                      <ClipboardList size={13} />
-                      {count} {count === 1 ? 'Request' : 'Requests'}
-                    </span>
-                  </div>
-
-                  {isAdmin && (
-                    <div style={{ width: '100%' }}>
-                      {isConfirmingDelete ? (
-                        <div
-                          style={{
-                            background: '#fee2e2',
-                            padding: '8px',
-                            borderRadius: '8px',
-                            textAlign: 'center',
-                          }}
-                        >
-                          <p style={{ fontSize: '12px', color: '#991b1b', margin: '0 0 6px 0', fontWeight: 600 }}>
-                            Confirm delete?
-                          </p>
-                          <div style={{ display: 'flex', gap: '6px', justifyContent: 'center' }}>
-                            <button
-                              type="button"
-                              onClick={() => handleDelete(category)}
-                              style={{
-                                background: '#dc2626',
-                                color: '#ffffff',
-                                border: 'none',
-                                borderRadius: '6px',
-                                padding: '4px 10px',
-                                fontSize: '11px',
-                                fontWeight: 600,
-                                cursor: 'pointer',
-                              }}
-                            >
-                              Yes, Delete
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => setDeleteConfirmId(null)}
-                              style={{
-                                background: '#ffffff',
-                                color: '#5c5951',
-                                border: '1px solid #d5d7c9',
-                                borderRadius: '6px',
-                                padding: '4px 10px',
-                                fontSize: '11px',
-                                cursor: 'pointer',
-                              }}
-                            >
-                              Cancel
-                            </button>
+                    <td>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <span className="list-icon">
+                          <Icon size={16} />
+                        </span>
+                        <div>
+                          <div className="list-title">{category.name}</div>
+                          <div className="list-subtitle" title={category.description || ''}>
+                            {category.description || 'No description provided'}
                           </div>
                         </div>
+                      </div>
+                    </td>
+
+                    <td>
+                      <span className={`list-status ${category.active ? 'active' : 'inactive'}`}>
+                        <span className="status-dot" />
+                        {category.active ? 'Active' : 'Inactive'}
+                      </span>
+                    </td>
+
+                    <td>
+                      <span className="list-count">
+                        <ClipboardList size={13} />
+                        {count} {count === 1 ? 'Request' : 'Requests'}
+                      </span>
+                    </td>
+
+                    <td style={{ fontSize: '13px', color: '#817e76' }}>
+                      {formatDate(category.createdAt)}
+                    </td>
+
+                    <td style={{ textAlign: 'right' }}>
+                      {isConfirmingDelete ? (
+                        <div className="delete-confirm">
+                          <span>Delete?</span>
+                          <button
+                            type="button"
+                            className="btn btn-danger"
+                            onClick={() => handleDelete(category)}
+                            style={{ padding: '5px 10px', fontSize: '12px' }}
+                          >
+                            Yes, delete
+                          </button>
+                          <button
+                            type="button"
+                            className="btn btn-secondary"
+                            onClick={() => setDeleteConfirmId(null)}
+                            style={{ padding: '5px 10px', fontSize: '12px' }}
+                          >
+                            Cancel
+                          </button>
+                        </div>
                       ) : (
-                        <div style={{ display: 'flex', gap: '6px', justifyContent: 'center' }}>
+                        <div className="list-actions">
                           <button
                             type="button"
                             className="btn btn-secondary"
                             onClick={() => handleOpenEdit(category)}
-                            title="Edit Category Details (PUT /api/categories/{id})"
-                            style={{
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              gap: '4px',
-                              padding: '6px 10px',
-                              fontSize: '12px',
-                            }}
+                            title="Edit Category (PUT /api/categories/{id})"
+                            style={{ padding: '6px 10px', fontSize: '12px' }}
                           >
-                            <Edit2 size={12} />
-                            Edit
+                            <Edit2 size={13} />
+                            <span>Edit</span>
                           </button>
 
                           <button
                             type="button"
+                            className="btn btn-secondary"
                             onClick={() => handleToggleActive(category)}
                             title={
                               category.active
                                 ? 'Deactivate Category (PATCH /api/categories/{id})'
                                 : 'Activate Category (PATCH /api/categories/{id})'
                             }
-                            style={{
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              gap: '4px',
-                              padding: '6px 10px',
-                              fontSize: '12px',
-                              borderRadius: '8px',
-                              border: '1px solid #d5d7c9',
-                              background: '#ffffff',
-                              color: category.active ? '#5c5951' : '#059669',
-                              cursor: 'pointer',
-                            }}
+                            style={{ padding: '6px 10px', fontSize: '12px' }}
                           >
-                            <Power size={12} />
-                            {category.active ? 'Disable' : 'Enable'}
+                            <Power size={13} />
+                            <span>{category.active ? 'Disable' : 'Enable'}</span>
                           </button>
 
                           <button
                             type="button"
+                            className="btn btn-danger"
                             onClick={() => setDeleteConfirmId(category.id)}
                             title="Delete Category (DELETE /api/categories/{id})"
-                            style={{
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              gap: '4px',
-                              padding: '6px 10px',
-                              fontSize: '12px',
-                              background: '#fee2e2',
-                              color: '#b91c1c',
-                              border: '1px solid #fecaca',
-                              borderRadius: '8px',
-                              cursor: 'pointer',
-                            }}
+                            style={{ padding: '6px 10px', fontSize: '12px' }}
                           >
-                            <Trash2 size={12} />
-                            Delete
+                            <Trash2 size={13} />
                           </button>
                         </div>
                       )}
-                    </div>
-                  )}
-                </div>
-              </div>
-            )
-          })}
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
         </div>
 
         {/* Empty state */}

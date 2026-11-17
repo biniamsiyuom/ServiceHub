@@ -29,9 +29,10 @@ import {
   type UserProfileResponse,
   type ListUsersParams,
 } from '../services/userService'
+import { departmentService } from '../services/departmentService'
 import { useAppSelector } from '../store/hooks'
 
-const DEPARTMENTS = [
+const FALLBACK_DEPARTMENTS = [
   { id: 1, name: 'Information Technology' },
   { id: 2, name: 'Facilities' },
   { id: 3, name: 'Operations' },
@@ -102,6 +103,20 @@ export default function StaffPage() {
 
   // Users data state
   const [users, setUsers] = useState<UserProfileResponse[]>(FALLBACK_STAFF)
+  const [departments, setDepartments] = useState<{ id: number; name: string }[]>(() => {
+    try {
+      const cached = localStorage.getItem('servicehub_departments')
+      if (cached) {
+        const parsed = JSON.parse(cached)
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed.map((d: { id: number; name: string }) => ({ id: d.id, name: d.name }))
+        }
+      }
+    } catch {
+      // ignore
+    }
+    return FALLBACK_DEPARTMENTS
+  })
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
@@ -129,6 +144,34 @@ export default function StaffPage() {
   const [formDepartmentId, setFormDepartmentId] = useState<number | ''>(1)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formError, setFormError] = useState<string | null>(null)
+
+  // Department options are shared with the Departments page
+  useEffect(() => {
+    let isMounted = true
+
+    const loadDepartments = async () => {
+      try {
+        const data = await departmentService.getAll()
+        if (isMounted && Array.isArray(data)) {
+          setDepartments(data.map((d) => ({ id: d.id, name: d.name })))
+          localStorage.setItem('servicehub_departments', JSON.stringify(data))
+        }
+      } catch {
+        // Keep cached or fallback department options
+      }
+    }
+
+    loadDepartments()
+
+    window.addEventListener('servicehub_departments_updated', loadDepartments)
+    window.addEventListener('storage', loadDepartments)
+
+    return () => {
+      isMounted = false
+      window.removeEventListener('servicehub_departments_updated', loadDepartments)
+      window.removeEventListener('storage', loadDepartments)
+    }
+  }, [])
 
   // Auto-dismiss success message
   useEffect(() => {
@@ -258,7 +301,7 @@ export default function StaffPage() {
     setFormEmail('')
     setFormPassword('')
     setFormPhone('')
-    setFormDepartmentId(1)
+    setFormDepartmentId(departments[0]?.id ?? '')
     setFormError(null)
     setShowAddModal(true)
   }
@@ -1277,7 +1320,7 @@ export default function StaffPage() {
                   }}
                 >
                   <option value="">Unassigned</option>
-                  {DEPARTMENTS.map((dept) => (
+                  {departments.map((dept) => (
                     <option key={dept.id} value={dept.id}>
                       {dept.name}
                     </option>
