@@ -291,21 +291,37 @@ export default function SettingsPage() {
           <div>
             <h2 className="section-title">Profile</h2>
             <p className="page-subtitle">
-              View your authenticated user account details and credentials retrieved directly from the ServiceHub API.
+              View and update your account details. Changes are saved through the ServiceHub API.
             </p>
           </div>
 
-          <button
-            type="button"
-            className="btn btn-secondary"
-            onClick={handleRefresh}
-            disabled={isRefreshing}
-            title="Reload profile from /api/users/me"
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
-          >
-            <RotateCw size={15} className={isRefreshing ? 'spinner' : ''} />
-            <span>Refresh Profile</span>
-          </button>
+          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={handleRefresh}
+              disabled={isRefreshing || isSaving}
+              title="Reload profile from /api/users/me"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+            >
+              <RotateCw size={15} className={isRefreshing ? 'spinner' : ''} />
+              <span>Refresh Profile</span>
+            </button>
+
+            {!isEditing && (
+              <button
+                type="button"
+                className="btn"
+                onClick={handleOpenEdit}
+                disabled={isSaving}
+                title="Edit your profile (PATCH /api/users/me)"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+              >
+                <Pencil size={15} />
+                <span>Edit Profile</span>
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Success Banner */}
@@ -357,6 +373,113 @@ export default function SettingsPage() {
               ✕
             </button>
           </div>
+        )}
+
+        {/* Edit Profile Form (PATCH /api/users/me) */}
+        {isEditing && (
+          <form
+            onSubmit={handleSubmitProfile}
+            style={{
+              background: '#f8f9f3',
+              border: '1px solid #d5d7c9',
+              padding: '22px',
+              borderRadius: '12px',
+              marginBottom: '20px',
+            }}
+          >
+            <h3 style={{ marginTop: 0, marginBottom: '16px', fontSize: '17px' }}>
+              Edit Profile
+            </h3>
+
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+                gap: '16px',
+                marginBottom: '16px',
+              }}
+            >
+              <div>
+                <label
+                  htmlFor="profile-full-name"
+                  style={{ display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: 600 }}
+                >
+                  Full Name *
+                </label>
+                <input
+                  id="profile-full-name"
+                  type="text"
+                  value={formFullName}
+                  onChange={(e) => setFormFullName(e.target.value)}
+                  maxLength={150}
+                  required
+                  disabled={isSaving}
+                  style={{
+                    width: '100%',
+                    padding: '10px 14px',
+                    borderRadius: '8px',
+                    border: '1px solid #d5d7c9',
+                    fontSize: '14px',
+                    boxSizing: 'border-box',
+                  }}
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="profile-phone"
+                  style={{ display: 'block', marginBottom: '6px', fontSize: '13px', fontWeight: 600 }}
+                >
+                  Phone Number
+                </label>
+                <input
+                  id="profile-phone"
+                  type="tel"
+                  value={formPhone}
+                  onChange={(e) => setFormPhone(e.target.value)}
+                  maxLength={30}
+                  placeholder="e.g. +1 555 0100"
+                  disabled={isSaving}
+                  style={{
+                    width: '100%',
+                    padding: '10px 14px',
+                    borderRadius: '8px',
+                    border: '1px solid #d5d7c9',
+                    fontSize: '14px',
+                    boxSizing: 'border-box',
+                  }}
+                />
+              </div>
+            </div>
+
+            <p style={{ fontSize: '12px', color: '#817e76', margin: '0 0 18px' }}>
+              Email, role and department are managed by system administrators and cannot be
+              changed here. Leave the phone field empty to remove it.
+            </p>
+
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button
+                type="submit"
+                className="btn"
+                disabled={isSaving}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+              >
+                <Save size={15} />
+                <span>{isSaving ? 'Saving...' : 'Save Changes'}</span>
+              </button>
+
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={handleCancelEdit}
+                disabled={isSaving}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+              >
+                <X size={15} />
+                <span>Cancel</span>
+              </button>
+            </div>
+          </form>
         )}
 
         {/* Logged In User Profile Card (via GET /api/users/me) */}
@@ -593,25 +716,6 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          {/* Backend Sync Note */}
-          <div
-            style={{
-              marginTop: '16px',
-              padding: '10px 14px',
-              borderRadius: '8px',
-              background: '#f1f2e9',
-              color: '#5c5951',
-              fontSize: '12px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-            }}
-          >
-            <Shield size={14} color="#817e76" />
-            <span>
-              Profile data is authenticated and fetched from <code>GET /api/users/me</code>. Role and department permissions are managed by system administrators.
-            </span>
-          </div>
         </div>
       </section>
     </div>
