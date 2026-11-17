@@ -256,11 +256,6 @@ useEffect(() => {
             <LogOut size={19} />
             Sign Out
           </button>
-          <div className="sidebar-help">
-            <Wrench size={23} />
-            <p>{isAdmin ? 'Need help managing services?' : 'Need assistance with a request?'}</p>
-            <small>{isAdmin ? 'ServiceHub Management' : 'ServiceHub Support'}</small>
-          </div>
         </div>
       </aside>
 
