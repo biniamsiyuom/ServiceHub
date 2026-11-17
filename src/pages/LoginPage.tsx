@@ -241,7 +241,7 @@ export default function LoginPage() {
         <div className="login-modal-overlay" onClick={() => setShowForgotModal(false)}>
           <div className="login-modal" onClick={(e) => e.stopPropagation()}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-              <KeyRound size={22} color="#60a5fa" />
+              <KeyRound size={22} color="#6f8a4f" />
               <h3>Reset your password</h3>
             </div>
             <p>
